@@ -35,15 +35,23 @@
 
 <p>Let&#39;s say we want to use our platform&#39;s <code>abs</code> function to find the absolute value of a number.  In Clojure this is done using the <code>org.clojure/math.numeric-tower</code> library, while ClojureScript would use JavaScript&#39;s <code>Math/abs</code> function.</p>
 
-<p>Lets add an &quot;absolute difference&quot; function to <code>shared_file.cljx</code>.  This function will simply find the absolute difference between two numbers.</p>
+<p>Lets add an &quot;absolute difference&quot; functionality to <code>shared_file.cljx</code>.  This function will simply find the absolute difference between two numbers.</p>
 
-<p>Our <code>shared-file.cljx</code> namespace should look like:</p>
+<p>First, let&#39;s make a test.  Add the code below to the <code>describe</code> block in your <code>shared_file_spec.cljx</code>:</p>
+
+<div class="highlight"><pre><code class="clojure"><span class="lineno">1</span> <span class="p">(</span><span class="nf">it</span> <span class="s">&quot;finds the absolute difference between two numbers&quot;</span>
+<span class="lineno">2</span>       <span class="p">(</span><span class="nf">should=</span> <span class="mi">1</span> <span class="p">(</span><span class="nf">shared-file/abs-diff</span> <span class="mi">-101</span> <span class="mi">100</span><span class="p">)))</span>
+</code></pre></div>
+
+<p>This test will simply help us decide if everything is working correctly. Now let&#39;s focus on the source code.</p>
+
+<p>Add the code below to your  <code>shared-file.cljx</code>:</p>
 
 <div class="highlight"><pre><code class="clojure"><span class="lineno">1</span> <span class="p">(</span><span class="kd">ns </span><span class="nv">myproject.shared-file</span>
 <span class="lineno">2</span>   <span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">myproject.platform</span> <span class="ss">:as</span> <span class="nv">platform</span><span class="p">]))</span>
 </code></pre></div>
 
-<p>And our new function should look like this:</p>
+<p>And add your new function, which should look like this:</p>
 
 <div class="highlight"><pre><code class="clojure"><span class="lineno">1</span> <span class="p">(</span><span class="kd">defn </span><span class="nv">absolute-difference</span> <span class="p">[</span><span class="nv">x</span> <span class="nv">y</span><span class="p">]</span>
 <span class="lineno">2</span>   <span class="p">(</span><span class="nb">- </span><span class="p">(</span><span class="nf">platform/absolute-val</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">platform/absolute-val</span> <span class="nv">y</span><span class="p">)))</span>
@@ -75,11 +83,11 @@
 <span class="lineno">4</span>      <span class="p">(</span><span class="nf">js/Math.abs</span> <span class="nv">num</span><span class="p">))</span>
 </code></pre></div>
 
-<p>Now we have two like-named functions in two like-named namespaces.  If we run our tests, they&#39;ll pass.  When Clojure runs, the <code>platform.clj</code> file will be used and the <code>numeric-tower</code> library will be used.  When ClojureScript runs, the <code>platform.cljs</code> file will be used and JavaScript&#39;s <code>abs</code> function will be executed.  Our <code>shared-file</code> doesn&#39;t need to know about those details.  It can simply call the platform namespace&#39;s function and receive the results.</p>
+<p>Now we have two like-named functions in two like-named namespaces.  If we run our tests, they&#39;ll pass.  When Clojure runs, the <code>platform.clj</code> file will be used and the <code>numeric-tower</code> library will be executed.  When ClojureScript runs, the <code>platform.cljs</code> file will be used and JavaScript&#39;s <code>abs</code> function will be executed.  Our <code>shared-file</code> doesn&#39;t need to know about those details.  It can simply call the platform namespace&#39;s function and receive the results.</p>
 
 <h1>Where We&#39;re At</h1>
 
-<p>We now have a function, <code>abs-diff</code> that is written once yet uses separate methods of execution based off of the given platform.  This means that not only can we write a single code base that can run in Clojure and ClojureScript, it also means that the differences between the two platforms is isolated to the <code>platform</code> namespace.</p>
+<p>We now have a function, <code>abs-diff</code> that is written once yet can be used for both Clojure and ClojureScript.  This means that not only can we write a single code base that can run in Clojure and ClojureScript, it also means that the differences between the two platforms is isolated to the <code>platform</code> namespace.</p>
 
 <p>In [Part 6][part_6] we&#39;ll utilized this same technique but will Clojure macros.</p>
 
