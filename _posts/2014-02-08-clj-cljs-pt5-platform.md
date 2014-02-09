@@ -18,16 +18,27 @@ An example will illustrate the project design:
 
 Let's say we want to use our platform's `abs` function to find the absolute value of a number.  In Clojure this is done using the `org.clojure/math.numeric-tower` library, while ClojureScript would use JavaScript's `Math/abs` function.
 
-Lets add an "absolute difference" function to `shared_file.cljx`.  This function will simply find the absolute difference between two numbers.
+Lets add an "absolute difference" functionality to `shared_file.cljx`.  This function will simply find the absolute difference between two numbers.
 
-Our `shared-file.cljx` namespace should look like:
+First, let's make a test.  Add the code below to the `describe` block in your `shared_file_spec.cljx`:
+
+{% highlight clojure linenos %}
+
+(it "finds the absolute difference between two numbers"
+      (should= 1 (shared-file/abs-diff -101 100)))
+
+{% endhighlight %}
+
+This test will simply help us decide if everything is working correctly. Now let's focus on the source code.
+
+Add the code below to your  `shared-file.cljx`:
 
 {% highlight clojure linenos %}
 (ns myproject.shared-file
   (:require [myproject.platform :as platform]))
 {% endhighlight %}
 
-And our new function should look like this:
+And add your new function, which should look like this:
 
 {% highlight clojure linenos %}
 
@@ -66,9 +77,9 @@ Now let's move to the cljs side.  In `platform.cljs` add:
      (js/Math.abs num))
 {% endhighlight %}
 
-Now we have two like-named functions in two like-named namespaces.  If we run our tests, they'll pass.  When Clojure runs, the `platform.clj` file will be used and the `numeric-tower` library will be used.  When ClojureScript runs, the `platform.cljs` file will be used and JavaScript's `abs` function will be executed.  Our `shared-file` doesn't need to know about those details.  It can simply call the platform namespace's function and receive the results.
+Now we have two like-named functions in two like-named namespaces.  If we run our tests, they'll pass.  When Clojure runs, the `platform.clj` file will be used and the `numeric-tower` library will be executed.  When ClojureScript runs, the `platform.cljs` file will be used and JavaScript's `abs` function will be executed.  Our `shared-file` doesn't need to know about those details.  It can simply call the platform namespace's function and receive the results.
 
 #Where We're At
-We now have a function, `abs-diff` that is written once yet uses separate methods of execution based off of the given platform.  This means that not only can we write a single code base that can run in Clojure and ClojureScript, it also means that the differences between the two platforms is isolated to the `platform` namespace.
+We now have a function, `abs-diff` that is written once yet can be used for both Clojure and ClojureScript.  This means that not only can we write a single code base that can run in Clojure and ClojureScript, it also means that the differences between the two platforms is isolated to the `platform` namespace.
 
 In [Part 6][part_6] we'll utilized this same technique but will Clojure macros.
