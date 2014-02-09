@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Combining Clojure and ClojureScript Libraries - Part 2: Set Up Your Base Project</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+
+        <div class="site">
+          <div class="header">
+            <h1 class="title"><a href="/">Your New Jekyll Site</a></h1>
+            <a class="extra" href="/">home</a>
+          </div>
+
+          <h2>Combining Clojure and ClojureScript Libraries - Part 2: Set Up Your Base Project</h2>
+<p class="meta">08 Feb 2014</p>
+
+<div class="post">
+<h1>Combining Clojure and ClojureScript Libraries: A Creative How-To</h1>
+
+<h1>Seting Up You Base Project:</h1>
+
+<p>The Clojure and ClojureScript versions of your project, although residing within the same jar, will have different classpaths.  It is important that you isolate these classpaths in a way that will allow you to test and run the two portions of your library independently.  This can be done by adding separate profiles to your project.clj file.  Let’s make a clj and cljs profile.  </p>
+
+<div class="highlight"><pre><code class="clojure"><span class="lineno"> 1</span> <span class="p">(</span><span class="kd">defproject </span><span class="nv">myproject</span> <span class="s">&quot;0.1.0-SNAPSHOT&quot;</span>
+<span class="lineno"> 2</span>   <span class="ss">:description</span> <span class="s">&quot;Combining Clojure and ClojureScript Libraries&quot;</span>
+<span class="lineno"> 3</span> 
+<span class="lineno"> 4</span>     <span class="ss">:dependencies</span> <span class="p">[[</span><span class="nv">org.clojure/clojure</span> <span class="s">&quot;1.5.1&quot;</span><span class="p">]</span>
+<span class="lineno"> 5</span>                      <span class="p">[</span><span class="nv">speclj</span> <span class="s">&quot;2.9.4&quot;</span><span class="p">]]</span>
+<span class="lineno"> 6</span> 
+<span class="lineno"> 7</span>     <span class="ss">:plugins</span> <span class="p">[[</span><span class="nv">speclj</span> <span class="s">&quot;6.9.4&quot;</span><span class="p">]]</span>
+<span class="lineno"> 8</span> 
+<span class="lineno"> 9</span>     <span class="ss">:aliases</span> <span class="p">{</span>  <span class="s">&quot;clj-test&quot;</span> <span class="p">[</span><span class="s">&quot;with-profile&quot;</span>,<span class="s">&quot;clj&quot;</span>,<span class="s">&quot;spec&quot;</span><span class="p">]</span>
+<span class="lineno">10</span>                 <span class="s">&quot;clj-test-auto&quot;</span>  <span class="p">[</span><span class="s">&quot;with-profile&quot;</span>,<span class="s">&quot;clj&quot;</span>,<span class="s">&quot;spec&quot;</span>, <span class="s">&quot;-a&quot;</span><span class="p">]</span>
+<span class="lineno">11</span>                 <span class="s">&quot;cljs-test&quot;</span> <span class="p">[</span><span class="s">&quot;with-profile&quot;</span>,<span class="s">&quot;cljs&quot;</span>, <span class="s">&quot;cljsbuild&quot;</span>, <span class="s">&quot;test&quot;</span><span class="p">]</span>
+<span class="lineno">12</span>                 <span class="s">&quot;cljs-test-auto&quot;</span> <span class="p">[</span><span class="s">&quot;with-profile&quot;</span>,<span class="s">&quot;cljs&quot;</span>, <span class="s">&quot;cljsbuild&quot;</span>, <span class="s">&quot;auto&quot;</span><span class="p">]</span>
+<span class="lineno">13</span>             <span class="p">}</span>
+<span class="lineno">14</span> 
+<span class="lineno">15</span> 
+<span class="lineno">16</span>     <span class="ss">:profiles</span> <span class="p">{</span>
+<span class="lineno">17</span>          <span class="ss">:dev</span> <span class="p">{</span> <span class="p">}</span>
+<span class="lineno">18</span> 
+<span class="lineno">19</span>          <span class="ss">:clj</span> <span class="p">{</span>
+<span class="lineno">20</span>              <span class="ss">:source-paths</span> <span class="p">[</span><span class="s">&quot;src/clj&quot;</span><span class="p">]</span>
+<span class="lineno">21</span>              <span class="ss">:test-paths</span> <span class="p">[</span><span class="s">&quot;spec/clj&quot;</span><span class="p">]</span>
+<span class="lineno">22</span>          <span class="p">}</span>
+<span class="lineno">23</span> 
+<span class="lineno">24</span>          <span class="ss">:cljs</span> <span class="p">{</span><span class="ss">:dependencies</span> <span class="p">[[</span><span class="nv">org.clojure/clojurescript</span> <span class="s">&quot;0.0-2014&quot;</span><span class="p">]</span> <span class="c1">;necessary for current version of speclj</span>
+<span class="lineno">25</span>                                <span class="p">[</span><span class="nv">org.clojure/tools.reader</span> <span class="s">&quot;0.7.10&quot;</span><span class="p">]</span> <span class="c1">;necessary for current version of speclj</span>
+<span class="lineno">26</span>                                <span class="p">[</span><span class="nv">lein-cljsbuild</span> <span class="s">&quot;1.0.2&quot;</span><span class="p">]]</span>
+<span class="lineno">27</span>                <span class="ss">:plugins</span> <span class="p">[[</span><span class="nv">lein-cljsbuild</span> <span class="s">&quot;1.0.2&quot;</span><span class="p">]]</span>
+<span class="lineno">28</span> 
+<span class="lineno">29</span>                <span class="ss">:cljsbuild</span> <span class="o">~</span><span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">run-specs</span> <span class="p">[</span><span class="s">&quot;bin/speclj&quot;</span> <span class="s">&quot;target/tests.js&quot;</span><span class="p">]]</span>
+<span class="lineno">30</span>                    <span class="p">{</span><span class="ss">:builds</span>
+<span class="lineno">31</span>                        <span class="p">{</span><span class="ss">:dev</span> <span class="p">{</span><span class="ss">:source-paths</span> <span class="p">[</span><span class="s">&quot;src/cljs&quot;</span>  <span class="s">&quot;spec/cljs&quot;</span><span class="p">]</span>
+<span class="lineno">32</span>                               <span class="ss">:compiler</span> <span class="p">{</span><span class="ss">:output-to</span> <span class="s">&quot;target/tests.js&quot;</span>
+<span class="lineno">33</span>                                          <span class="ss">:pretty-print</span> <span class="nv">true</span><span class="p">}</span>
+<span class="lineno">34</span>                               <span class="ss">:notify-command</span> <span class="nv">run-specs</span><span class="p">}}</span>
+<span class="lineno">35</span>                <span class="ss">:test-commands</span> <span class="p">{</span><span class="s">&quot;test&quot;</span> <span class="nv">run-specs</span><span class="p">}})</span>
+<span class="lineno">36</span> 
+<span class="lineno">37</span>               <span class="p">}</span>
+<span class="lineno">38</span>         <span class="p">}</span>
+<span class="lineno">39</span> <span class="p">)</span>
+</code></pre></div>
+
+<p>Now we can manipulate the two classpaths independently of each other.  However, you should still be wary of the fact that the two paths will have to get along somewhat when we put everything together.  This is especially the case for .clj files in your :cljs profile.  With separate profiles you can two different .clj files with the exact same name - one in the clj profile path and the other in the cljs profile path.  Only a single file-name.clj can exist when we combine the paths.</p>
+
+</div>
+
+
+          <div class="footer">
+            <div class="contact">
+              <p>
+                Your Name<br />
+                What You Are<br />
+                you@example.com
+              </p>
+            </div>
+            <div class="contact">
+              <p>
+                <a href="https://github.com/yourusername">github.com/yourusername</a><br />
+                <a href="https://twitter.com/yourusername">twitter.com/yourusername</a><br />
+              </p>
+            </div>
+          </div>
+        </div>
+
+    </body>
+</html>
