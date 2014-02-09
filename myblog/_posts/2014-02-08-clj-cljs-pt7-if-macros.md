@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Combining Clojure and ClojureScript Libraries - Part 7: Fragile 'If's"
-date:   2014-02-08 09:57:07
+date:   2014-02-08 09:57:24
 categories: jekyll update
 ---
 

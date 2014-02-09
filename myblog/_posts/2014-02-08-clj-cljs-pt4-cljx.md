@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Combining Clojure and ClojureScript Libraries - Part 4: Using CLJX"
-date:   2014-02-08 09:57:07
+date:   2014-02-08 09:57:27
 categories: jekyll update
 ---
 

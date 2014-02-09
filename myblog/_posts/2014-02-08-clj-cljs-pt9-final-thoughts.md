@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Combining Clojure and ClojureScript Libraries - Part 9: Final Thoughts"
-date:   2014-02-08 09:57:07
+date:   2014-02-08 09:57:21
 categories: jekyll update
 ---
 

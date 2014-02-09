@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Combining Clojure and ClojureScript Libraries - Part 6: Platform Files and Macros"
-date:   2014-02-08 09:57:07
+date:   2014-02-08 09:57:25
 categories: jekyll update
 ---
 
