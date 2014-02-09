@@ -7,45 +7,176 @@ categories: jekyll update
 
 [8thLight]: https://8thlight.com
 [speclj]:    https://github.com/slagyr/speclj 
+[cljx]: https://8thlight.com
 
-####Introduction: ClojureScript and the Case of Two Painfully Similar Libraries
+#Working With CLJX:
 
-  ClojureScript is an incredible new project that any Clojurian can appreciate.  What could be better than replacing headache-inducing JavaScript with the clean, flowing syntax of Clojure?  But ClojureScript is very new, and in some cases it's lack of polish can be frustrating.  One of the of most frustrating aspects of ClojureScript currently, is that it fails to fails to be a complete abstraction of JavaScript in Clojure.  this comes from the fact that ClojureScript's syntax and abilities do not align perfectly with their Clojure counterparts.  For example, the binding function is not currently implemented in ClojureScript.  That may seem trivial but if you're hoping to transfer a piece of Clojure code to ClojureScript, and that code has a binding call, you're going to have to learn additional aspects of ClojureScript and make a new version of you existing Clojure code to make that piece of code work.  
 
-  ClojureScript is an incredible new project that any Clojurian can appreciate.  What could be better than replacing the often clunky syntax of JavaScript with the clean, flowing syntax of Clojure?  But ClojureScript is very new, and in some cases it's lack of polish can prove to be frustrating.  One of the of most frustrating aspects of ClojureScript currently, is that it fails to be a complete abstraction of JavaScript in Clojure.  This comes from the fact that ClojureScript's capabilities do not align perfectly with their Clojure counterparts.  For example, Clojure’s binding function is not currently implemented in ClojureScript.  This may seem trivial but if you're hoping to transfer a piece of Clojure code to ClojureScript with a binding function call, you now must learn additional aspects of ClojureScript to get that piece of code to work.  You now must also maintain the new ClojureScript version of your code along with your pre-existing Clojure version.  These small differences can add up and before you know it you’re could be maintaining two separate Libraries.  The kicker is of course that these libraries have about 95% code that is common but the 5% of difference simply cannot be resolved.
+Next, we'll use the [CLJX library][cljx].  CLJX translates a `.cljx` files into separate `.cljs` and `.clj` files.  You can use small `#+cljs` an `#+clj` tags to differentiate which forms you would like included in which version.  In the 8th Light Speclj project, CLJX replaced our hand-rolled pre-compiler.  this gave us the benefit of relying on an open-source, updated dependency instead of our own program.  
 
-  We encountered this problem here at [8th Light][8thLight] while attempting to extend our Clojure testing framework [Speclj] to ClojureScript.  There were numerous ClojureScript incompatibilities sprinkled throughout the existing Clojure library.  In our original solution, we built a pre-compiler that could be run against the Clojure code which would switch out all of the incompatibilities with their ClojureScript equivalents.  This solution got us pretty far but it came with a few major drawbacks.  First, the pre-compiler was a one-off design, built specifically for the Speclj project.  There was little chance that it would be maintained, which introduced an added layer of fragility to our project.  More importantly, the ClojureScript version still was its own library.  This led to the oft confusing distinction betweent Speclj (Clojure) and Specljs “with an ‘s’ at the end” (ClojureScript).  Both libraries had to be added independently to a project.   
+However, CLJX does not come without a few downsides.  First, you'll have to keep track of the status of your cljx results. If you make a change in a `.cljx` file and, for whatever reason, do not recompile the cljx folder, your changes will not appear in your clj and cljs files.  Second, You should be careful to not make changes to the generated `.clj` and `.cljs` files since they will be overridden the next time you generate your `cljx` output.  Third, if you're running a test autorunner, it will likely not pick up changes to .cljx files.
 
-  Recently, we took another look at our two massively similar libraries and asked if, with the changes to the Clojure/ClojureScript landscape, we could do better.   Not to spoil the fun, but we were able to combine our two libraries into one.  Unfortunately it did take a few absolutely-necessary hacks but that is the cost of working with such a exciting, constantly changing technology like ClojureScript.  We definitely look forward to the day when ClojureScript becomes an effortless abstraction of JavaScript but until then a little creativity will have to suffice.
+So CLJX comes with a cost, but it does allow you to keep a relatively similar code base for your `clj` and `cljs` libraries.  
 
-#Combining Clojure and ClojureScript Libraries: A Creative How-To
+#Adding CLJX to your Project.clj
 
-#Dividing Your ClassPaths with Profiles:
+To add `cljx` simply add `[com.keminglabs/cljx "0.3.1"]` to you general `:dependencies` map. You will then have to add configure src and output paths to the `:cljx` key:
 
-  The Clojure and ClojureScript versions of your project, although residing within the same jar, will have different classpaths.  It is important that you isolate these classpaths in a way that will allow you to test and run the two portions of your library independently.  This can be done by adding separate profiles to your project.clj file.  Let’s make a clj and cljs profile.  
+{% highlight clojure linenos %}
+    :cljx {:builds [{:source-paths ["src/cljx"]
+                     :output-path "target/generated/src/clj"
+                     :rules :clj}
+                    {:source-paths ["src/cljx"]
+                     :output-path "target/generated/src/cljs"
+                     :rules :cljs}
+                    {:source-paths ["spec/cljx"]
+                     :output-path "target/generated/spec/clj"
+                     :rules :clj}
+                    {:source-paths ["spec/cljx"]
+                     :output-path "target/generated/spec/cljs"
+                     :rules :cljs}]}
+{% endhighlight %}
+
+So now every `.cljx` file in our `src/cljx` folder will be translated to separate `.clj` and `.cljs` version, which will be stored in the `target/generated/src/` folder.
+
+It also will help to add the cljx `hooks` so that cljx will automatically build your files when you attempt a normal leiningen command:
+
+{% highlight clojure linenos %}
+    :hooks [cljx.hooks]
+{% endhighlight %}
+
+
+#Configuring Your Source-Paths and Test-Paths
+
+With cljx installed, we'll have to change our `source-paths` and `test-paths` so that they look for the files generated by cljx.
+
+For your `:clj` profile, simply modify the paths like below:
+
+{% highlight clojure linenos %}
+   :clj {
+          :source-paths ["src/clj", "target/generated/src/clj"]
+          :test-paths ["spec/clj", "target/generated/spec/clj"]
+   }
+{% endhighlight %}
+
+For your `:cljs` you new source and test resources will both go in `:source-paths` collection:
+
+
+{% highlight clojure linenos %}
+   {:source-paths ["src/cljs"
+                   "spec/cljs"
+                   "target/generated/src/cljs"
+                   "target/generated/spec/cljs"]
+          :compiler {:output-to "target/tests.js"
+                     :pretty-print true}
+          :notify-command run-specs}
+{% endhighlight %}
+
+
+We're almost done.  With cljx `hooks` in your `project.clj`, cljx will auto-generate files before you run you Clojure tests.  However, for ClojureScript we'll have to test leiningen to compile before we run tests.  We can do this easily by changing our `cljs-test` alias:
+
+
+{% highlight clojure linenos %}
+   :aliases { "cljs-test" ["do" "cljx," "with-profile" "cljs" "cljsbuild" "test"] }
+{% endhighlight %}
+
+We also are little more concerned about the `target` directory.  So we may want to clean that directory before regenerating our cljx code.  We can add a few aliases that help us with that:
+
+{% highlight clojure linenos %}
+    :aliases { "clj-clean-test" ["do" "clean," "clj-test"]
+               "cljs-clean-test" ["do" "clean," "cljs-test"]
+            }
+{% endhighlight %}
+
+Lastly, we can add a final alias that will run both our `clj` and `cljs` tests in one command:
+
+{% highlight clojure linenos %}
+
+    :aliases { "all-tests" ["do" "clean," "clj-test," "cljs-test"] }
+{% endhighlight %}
+
+Now our `project.clj` file is updated. We should now be able to add a `.cljx` file to our project and it will generate separate but similar `.clj` and `.cljs` files.
+
+#Adding a .cljx File to your Project
+
+If you are using the [sample project][sample_project] you'll see that the we already have `src/clj/myproject/core.clj` and `src/cljs/myproject/core.cljs`.  We'll create a similar structure for your `.cljx` files.  
+
+
+Let's make `src/cljx/myproject/` folder and add `shared_file.cljx` to the new folder.  Next, let's make `spec/cljx/myproject/` folder and add `shared_file_spec.cljx`.
+
+In `shared_file.cljx` add:
+
+{% highlight clojure linenos %}
+
+(ns myproject.shared-file)
+
+(defn multiply [x y]
+  (* x y)
+)
+
+{% endhighlight %}
+\*
+
+In `shared_file_spec.cljx` add:
+
+{% highlight clojure linenos %}
+
+(ns myproject.shared-file-spec
+  (#+clj :require #+cljs :require-macros [speclj.core :refer [describe it should=]])
+  (:require [speclj.core]
+            [myproject.shared-file :as shared-file]))
+
+(describe "sample cljx file"
+
+   (it "uses cljx files to generate tested code in clj an cljx"
+      (should= 12 (shared-file/multiply 3 4)))
+)
+
+{% endhighlight %}
+
+
+As you can see, the spec file includes `#+clj` and `#+cljs` tags. For this file, that means that cljx will add `:require` to the clojure version of the file and `:require-macros` to the Clojure version of the file.  These tags will include or exclude the entire form that follows them.  So one tag can include/exclude an entire function.
+
+
+#Run our Tests with A CLJX file
+
+
+Now that we have cljx set up and a `.cljx` file and test file, we can run `lein clj-clean-test` and `lein cljs-clean-test`.  Both should evaluate the `multiply` test included in the single `.cljx` file.
+
+
+#Where We Are
+
+Now we have a single `.cljx` source and spec file that will be generated into separate `.clj` and `.cljs` files.  And we can our code in both Clojure and ClojureScript.  In [Part 5][part_5] we will finall get to writing some code that will help us build one functional source for Clojure and Clojurescript.
+
+
+-----
+
+For reference, here is a look at the final `project.clj` file:
 
 {% highlight clojure linenos %}
 (defproject myproject "0.1.0-SNAPSHOT"
   :description "Combining Clojure and ClojureScript Libraries"
 
     :dependencies [[org.clojure/clojure "1.5.1"]
-                     [speclj "2.9.4"]]
+                   [speclj "2.9.4"]
+                   [com.keminglabs/cljx "0.3.1"]
+                   ]]
 
     :plugins [[speclj "6.9.4"]]
 
     :aliases {  "clj-test" ["with-profile","clj","spec"]
-                "clj-test-auto"  ["with-profile","clj","spec", "-a"]
+                "clj-clean-test" ["do" "clean," "clj-test"]
                 "cljs-test" ["with-profile","cljs", "cljsbuild", "test"]
-                "cljs-test-auto" ["with-profile","cljs", "cljsbuild", "auto"]
+                "cljs-clean-test" ["do" "clean," "cljs-test"]
+                "all-tests" ["do" "clean," "clj-test," "cljs-test"]
             }
 
 
     :profiles {
-         :dev { }
 
          :clj {
-             :source-paths ["src/clj"]
-             :test-paths ["spec/clj"]
+                :source-paths ["src/clj", "target/generated/src/clj"]
+                :test-paths ["spec/clj", "target/generated/spec/clj"]
          }
 
          :cljs {:dependencies [[org.clojure/clojurescript "0.0-2014"] ;necessary for current version of speclj
@@ -55,7 +186,10 @@ categories: jekyll update
 
                :cljsbuild ~(let [run-specs ["bin/speclj" "target/tests.js"]]
                    {:builds
-                       {:dev {:source-paths ["src/cljs"  "spec/cljs"]
+                       {:dev {:source-paths ["src/cljs"
+                                             "spec/cljs"
+                                             "target/generated/src/cljs"
+                                             "target/generated/spec/cljs"]
                               :compiler {:output-to "target/tests.js"
                                          :pretty-print true}
                               :notify-command run-specs}}
@@ -63,56 +197,20 @@ categories: jekyll update
 
               }
         }
+
+    :hooks [cljx.hooks]
+    :cljx {:builds [{:source-paths ["src/cljx"]
+                     :output-path "target/generated/src/clj"
+                     :rules :clj}
+                    {:source-paths ["src/cljx"]
+                     :output-path "target/generated/src/cljs"
+                     :rules :cljs}
+                    {:source-paths ["spec/cljx"]
+                     :output-path "target/generated/spec/clj"
+                     :rules :clj}
+                    {:source-paths ["spec/cljx"]
+                     :output-path "target/generated/spec/cljs"
+                     :rules :cljs}]}
+
 )
 {% endhighlight %}
-
-Now we can manipulate the two classpaths independently of each other.  However, you should still be wary of the fact that the two paths will have to get along somewhat when we put everything together.  This is especially the case for .clj files in your :cljs profile.  With separate profiles you can two different .clj files with the exact same name - one in the clj profile path and the other in the cljs profile path.  Only a single file-name.clj can exist when we combine the paths.
-
-
-#Generating Code using CLJX:
-
-Next, we'll use the CLJX library.  CLJX translates a .cljx files into separate cljs and clj files.  You can use small #+cljs an #+clj tags to differentiate which forms you would like to be in which version.  In the 8th Light Speclj project, CLJX replaced our hand-rolled pre-compiler.  this gave us the benefit of relying on an open-source, updated dependency instead of our own little program.  
-
-lets configure it:
-
--project.clj changes
--note location of information
-
-However, CLJX can be a little tricky.  The hardest part may be just keeping everything straight.  All shared clj and cljs files must be renamed as .cljx files.  Normally, these files will be in your src file just like the other source files.  However, they will generate .clj and cljs files in a separate location, normal something like target/generated/.  So now some your “true” source code is in your src file while a good amount could be in your target/generated file.   This also means that your project.clj src and test maps will have to be updated with your target/generated equivalents.
-
-#Using Platform Files to Generate Polymorphic Action:
-
-For most Clojure/ClojureScript discrepancies, a platform dependency will do the trick.  Make two files with the same name - one a .clj and the other .cljs.  Add them to their respective src folders.  For any Clojure/ClojureScript discrepancy add matching functions to each file and implement the platform’s version of that functionality.  
-
-For most cases you can simply :require the file, although it’s best if you use an alias since ClojureScript effectively requires aliases for its imports.  Clojure will obviously find the .clj version of your platform file and run based off of that.  ClojureScript will do the same for the .cljs file.  Here are a few examples:
-
-- throw error
-- add
-
-#When All Else Fails, Add an IF:
-
-But some issues can’t be brushed away through runtime polymorphism.  For example, a Throwable is required to be defined at Compile time.  Our previous platform strategy won’t work.  Instead we’ll be limited to macros and we’ll nefariously switch compile time object types during macro expansion.  We’ll do this by determining if a macro file is expanding in a clojure or clojurescript context.  This is the necessary-hack portion of the how-to. 
-
-We’ll determine the macro expansion context by simply checking to see if a file necessary to cljs compilation is present.  This is fragile since that file could change or something, really anything could change the feedback for the if statement leaving us with a broken program.  But such life in the land of ClojureScript.  Here is an example of what might work:
-
-- cljs hack
-
-So here, we’re seeing if we can find the cljs.analyzer namespace and choose which compile-time pieces to add to our macros based off of that result.
-
-Of course clojure macros are a monster in themselves but for this how-to you really don’t need to know much other than that the form after the tilde will be evaluated during expansion time, meaning that at compile time the if statement will be gone and the only thing that will remain will be the result of that if statement.  So by compile time all that should be left is exactly what we want for each platform.  Here is an example using the Throwable object in Java.
-
-- throwable
-
-#NS-Resolve Your Last Concerns Away
-
-So we’re so close to being done but you might run into one additional problem.  What if the cljs part of your (cljs?) hack references a cljs file?  clojure will attempt to find the namespace before the if statement is evaluated, thus you’ll get a compile time error.  Here is an example of this error:
-
--cljs-compiler issue
-
-We can get around this by using “ns-resolve”  with a namespace and function argument.  Now the cljs.compiler namespace will not need to be resolved until runtime and only when it runs.  Since that code shouldn’t be called in the first place.  
-
-
-#Combining it All into One:
-
-So now things finally work.  Let’s combine them into one jar and see if it runs in both clojure and clojurescript.  For this we’ll create a production profile that will combine our clj and cljs files.  
-

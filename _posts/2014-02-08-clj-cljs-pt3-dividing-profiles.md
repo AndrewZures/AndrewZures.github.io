@@ -5,7 +5,6 @@ date:   2014-02-08 09:57:28
 categories: jekyll update
 ---
 
-
 [speclj]:    https://github.com/slagyr/speclj 
 [sample_project]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/base_project
 [part_4]: https://github.com/slagyr/speclj
@@ -61,13 +60,10 @@ The ClojureScript testing alias looks very similar:
 
 Now, if you have `Speclj` configured correctly, you can run `lein clj-test` and `lein cljs-test` from the command line to run your tests.
 
-
 With our profiles in place, we can move ot [Part 4][part_4], where we addded the `cljx` dependency.
 And again, here is a link to our [sample project][sample_project] that shows a working sample project reflecting part of the tutorial.
 
-
 Here's a look at the entire `project.clj` file after our Part 3 changes.
-
 
 {% highlight clojure linenos %}
 (defproject myproject "0.1.0-SNAPSHOT"
