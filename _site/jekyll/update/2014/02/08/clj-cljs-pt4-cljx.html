@@ -25,116 +25,186 @@
 <p class="meta">08 Feb 2014</p>
 
 <div class="post">
-<h4>Introduction: ClojureScript and the Case of Two Painfully Similar Libraries</h4>
+<h1>Working With CLJX:</h1>
 
-<p>ClojureScript is an incredible new project that any Clojurian can appreciate.  What could be better than replacing headache-inducing JavaScript with the clean, flowing syntax of Clojure?  But ClojureScript is very new, and in some cases it&#39;s lack of polish can be frustrating.  One of the of most frustrating aspects of ClojureScript currently, is that it fails to fails to be a complete abstraction of JavaScript in Clojure.  this comes from the fact that ClojureScript&#39;s syntax and abilities do not align perfectly with their Clojure counterparts.  For example, the binding function is not currently implemented in ClojureScript.  That may seem trivial but if you&#39;re hoping to transfer a piece of Clojure code to ClojureScript, and that code has a binding call, you&#39;re going to have to learn additional aspects of ClojureScript and make a new version of you existing Clojure code to make that piece of code work.  </p>
+<p>Next, we&#39;ll use the <a href="https://8thlight.com">CLJX library</a>.  CLJX translates a <code>.cljx</code> files into separate <code>.cljs</code> and <code>.clj</code> files.  You can use small <code>#+cljs</code> an <code>#+clj</code> tags to differentiate which forms you would like included in which version.  In the 8th Light Speclj project, CLJX replaced our hand-rolled pre-compiler.  this gave us the benefit of relying on an open-source, updated dependency instead of our own program.  </p>
 
-<p>ClojureScript is an incredible new project that any Clojurian can appreciate.  What could be better than replacing the often clunky syntax of JavaScript with the clean, flowing syntax of Clojure?  But ClojureScript is very new, and in some cases it&#39;s lack of polish can prove to be frustrating.  One of the of most frustrating aspects of ClojureScript currently, is that it fails to be a complete abstraction of JavaScript in Clojure.  This comes from the fact that ClojureScript&#39;s capabilities do not align perfectly with their Clojure counterparts.  For example, Clojure’s binding function is not currently implemented in ClojureScript.  This may seem trivial but if you&#39;re hoping to transfer a piece of Clojure code to ClojureScript with a binding function call, you now must learn additional aspects of ClojureScript to get that piece of code to work.  You now must also maintain the new ClojureScript version of your code along with your pre-existing Clojure version.  These small differences can add up and before you know it you’re could be maintaining two separate Libraries.  The kicker is of course that these libraries have about 95% code that is common but the 5% of difference simply cannot be resolved.</p>
+<p>However, CLJX does not come without a few downsides.  First, you&#39;ll have to keep track of the status of your cljx results. If you make a change in a <code>.cljx</code> file and, for whatever reason, do not recompile the cljx folder, your changes will not appear in your clj and cljs files.  Second, You should be careful to not make changes to the generated <code>.clj</code> and <code>.cljs</code> files since they will be overridden the next time you generate your <code>cljx</code> output.  Third, if you&#39;re running a test autorunner, it will likely not pick up changes to .cljx files.</p>
 
-<p>We encountered this problem here at <a href="https://8thlight.com">8th Light</a> while attempting to extend our Clojure testing framework <a href="https://github.com/slagyr/speclj">Speclj</a> to ClojureScript.  There were numerous ClojureScript incompatibilities sprinkled throughout the existing Clojure library.  In our original solution, we built a pre-compiler that could be run against the Clojure code which would switch out all of the incompatibilities with their ClojureScript equivalents.  This solution got us pretty far but it came with a few major drawbacks.  First, the pre-compiler was a one-off design, built specifically for the Speclj project.  There was little chance that it would be maintained, which introduced an added layer of fragility to our project.  More importantly, the ClojureScript version still was its own library.  This led to the oft confusing distinction betweent Speclj (Clojure) and Specljs “with an ‘s’ at the end” (ClojureScript).  Both libraries had to be added independently to a project.   </p>
+<p>So CLJX comes with a cost, but it does allow you to keep a relatively similar code base for your <code>clj</code> and <code>cljs</code> libraries.  </p>
 
-<p>Recently, we took another look at our two massively similar libraries and asked if, with the changes to the Clojure/ClojureScript landscape, we could do better.   Not to spoil the fun, but we were able to combine our two libraries into one.  Unfortunately it did take a few absolutely-necessary hacks but that is the cost of working with such a exciting, constantly changing technology like ClojureScript.  We definitely look forward to the day when ClojureScript becomes an effortless abstraction of JavaScript but until then a little creativity will have to suffice.</p>
+<h1>Adding CLJX to your Project.clj</h1>
 
-<h1>Combining Clojure and ClojureScript Libraries: A Creative How-To</h1>
+<p>To add <code>cljx</code> simply add <code>[com.keminglabs/cljx &quot;0.3.1&quot;]</code> to you general <code>:dependencies</code> map. You will then have to add configure src and output paths to the <code>:cljx</code> key:</p>
 
-<h1>Dividing Your ClassPaths with Profiles:</h1>
+<div class="highlight"><pre><code class="clojure"><span class="lineno"> 1</span>     <span class="ss">:cljx</span> <span class="p">{</span><span class="ss">:builds</span> <span class="p">[{</span><span class="ss">:source-paths</span> <span class="p">[</span><span class="s">&quot;src/cljx&quot;</span><span class="p">]</span>
+<span class="lineno"> 2</span>                      <span class="ss">:output-path</span> <span class="s">&quot;target/generated/src/clj&quot;</span>
+<span class="lineno"> 3</span>                      <span class="ss">:rules</span> <span class="ss">:clj</span><span class="p">}</span>
+<span class="lineno"> 4</span>                     <span class="p">{</span><span class="ss">:source-paths</span> <span class="p">[</span><span class="s">&quot;src/cljx&quot;</span><span class="p">]</span>
+<span class="lineno"> 5</span>                      <span class="ss">:output-path</span> <span class="s">&quot;target/generated/src/cljs&quot;</span>
+<span class="lineno"> 6</span>                      <span class="ss">:rules</span> <span class="ss">:cljs</span><span class="p">}</span>
+<span class="lineno"> 7</span>                     <span class="p">{</span><span class="ss">:source-paths</span> <span class="p">[</span><span class="s">&quot;spec/cljx&quot;</span><span class="p">]</span>
+<span class="lineno"> 8</span>                      <span class="ss">:output-path</span> <span class="s">&quot;target/generated/spec/clj&quot;</span>
+<span class="lineno"> 9</span>                      <span class="ss">:rules</span> <span class="ss">:clj</span><span class="p">}</span>
+<span class="lineno">10</span>                     <span class="p">{</span><span class="ss">:source-paths</span> <span class="p">[</span><span class="s">&quot;spec/cljx&quot;</span><span class="p">]</span>
+<span class="lineno">11</span>                      <span class="ss">:output-path</span> <span class="s">&quot;target/generated/spec/cljs&quot;</span>
+<span class="lineno">12</span>                      <span class="ss">:rules</span> <span class="ss">:cljs</span><span class="p">}]}</span>
+</code></pre></div>
 
-<p>The Clojure and ClojureScript versions of your project, although residing within the same jar, will have different classpaths.  It is important that you isolate these classpaths in a way that will allow you to test and run the two portions of your library independently.  This can be done by adding separate profiles to your project.clj file.  Let’s make a clj and cljs profile.  </p>
+<p>So now every <code>.cljx</code> file in our <code>src/cljx</code> folder will be translated to separate <code>.clj</code> and <code>.cljs</code> version, which will be stored in the <code>target/generated/src/</code> folder.</p>
+
+<p>It also will help to add the cljx <code>hooks</code> so that cljx will automatically build your files when you attempt a normal leiningen command:</p>
+
+<div class="highlight"><pre><code class="clojure"><span class="lineno">1</span>     <span class="ss">:hooks</span> <span class="p">[</span><span class="nv">cljx.hooks</span><span class="p">]</span>
+</code></pre></div>
+
+<h1>Configuring Your Source-Paths and Test-Paths</h1>
+
+<p>With cljx installed, we&#39;ll have to change our <code>source-paths</code> and <code>test-paths</code> so that they look for the files generated by cljx.</p>
+
+<p>For your <code>:clj</code> profile, simply modify the paths like below:</p>
+
+<div class="highlight"><pre><code class="clojure"><span class="lineno">1</span>    <span class="ss">:clj</span> <span class="p">{</span>
+<span class="lineno">2</span>           <span class="ss">:source-paths</span> <span class="p">[</span><span class="s">&quot;src/clj&quot;</span>, <span class="s">&quot;target/generated/src/clj&quot;</span><span class="p">]</span>
+<span class="lineno">3</span>           <span class="ss">:test-paths</span> <span class="p">[</span><span class="s">&quot;spec/clj&quot;</span>, <span class="s">&quot;target/generated/spec/clj&quot;</span><span class="p">]</span>
+<span class="lineno">4</span>    <span class="p">}</span>
+</code></pre></div>
+
+<p>For your <code>:cljs</code> you new source and test resources will both go in <code>:source-paths</code> collection:</p>
+
+<div class="highlight"><pre><code class="clojure"><span class="lineno">1</span>    <span class="p">{</span><span class="ss">:source-paths</span> <span class="p">[</span><span class="s">&quot;src/cljs&quot;</span>
+<span class="lineno">2</span>                    <span class="s">&quot;spec/cljs&quot;</span>
+<span class="lineno">3</span>                    <span class="s">&quot;target/generated/src/cljs&quot;</span>
+<span class="lineno">4</span>                    <span class="s">&quot;target/generated/spec/cljs&quot;</span><span class="p">]</span>
+<span class="lineno">5</span>           <span class="ss">:compiler</span> <span class="p">{</span><span class="ss">:output-to</span> <span class="s">&quot;target/tests.js&quot;</span>
+<span class="lineno">6</span>                      <span class="ss">:pretty-print</span> <span class="nv">true</span><span class="p">}</span>
+<span class="lineno">7</span>           <span class="ss">:notify-command</span> <span class="nv">run-specs</span><span class="p">}</span>
+</code></pre></div>
+
+<p>We&#39;re almost done.  With cljx <code>hooks</code> in your <code>project.clj</code>, cljx will auto-generate files before you run you Clojure tests.  However, for ClojureScript we&#39;ll have to test leiningen to compile before we run tests.  We can do this easily by changing our <code>cljs-test</code> alias:</p>
+
+<div class="highlight"><pre><code class="clojure"><span class="lineno">1</span>    <span class="ss">:aliases</span> <span class="p">{</span> <span class="s">&quot;cljs-test&quot;</span> <span class="p">[</span><span class="s">&quot;do&quot;</span> <span class="s">&quot;cljx,&quot;</span> <span class="s">&quot;with-profile&quot;</span> <span class="s">&quot;cljs&quot;</span> <span class="s">&quot;cljsbuild&quot;</span> <span class="s">&quot;test&quot;</span><span class="p">]</span> <span class="p">}</span>
+</code></pre></div>
+
+<p>We also are little more concerned about the <code>target</code> directory.  So we may want to clean that directory before regenerating our cljx code.  We can add a few aliases that help us with that:</p>
+
+<div class="highlight"><pre><code class="clojure"><span class="lineno">1</span>     <span class="ss">:aliases</span> <span class="p">{</span> <span class="s">&quot;clj-clean-test&quot;</span> <span class="p">[</span><span class="s">&quot;do&quot;</span> <span class="s">&quot;clean,&quot;</span> <span class="s">&quot;clj-test&quot;</span><span class="p">]</span>
+<span class="lineno">2</span>                <span class="s">&quot;cljs-clean-test&quot;</span> <span class="p">[</span><span class="s">&quot;do&quot;</span> <span class="s">&quot;clean,&quot;</span> <span class="s">&quot;cljs-test&quot;</span><span class="p">]</span>
+<span class="lineno">3</span>             <span class="p">}</span>
+</code></pre></div>
+
+<p>Lastly, we can add a final alias that will run both our <code>clj</code> and <code>cljs</code> tests in one command:</p>
+
+<div class="highlight"><pre><code class="clojure"><span class="lineno">1</span>     <span class="ss">:aliases</span> <span class="p">{</span> <span class="s">&quot;all-tests&quot;</span> <span class="p">[</span><span class="s">&quot;do&quot;</span> <span class="s">&quot;clean,&quot;</span> <span class="s">&quot;clj-test,&quot;</span> <span class="s">&quot;cljs-test&quot;</span><span class="p">]</span> <span class="p">}</span>
+</code></pre></div>
+
+<p>Now our <code>project.clj</code> file is updated. We should now be able to add a <code>.cljx</code> file to our project and it will generate separate but similar <code>.clj</code> and <code>.cljs</code> files.</p>
+
+<h1>Adding a .cljx File to your Project</h1>
+
+<p>If you are using the [sample project][sample_project] you&#39;ll see that the we already have <code>src/clj/myproject/core.clj</code> and <code>src/cljs/myproject/core.cljs</code>.  We&#39;ll create a similar structure for your <code>.cljx</code> files.  </p>
+
+<p>Let&#39;s make <code>src/cljx/myproject/</code> folder and add <code>shared_file.cljx</code> to the new folder.  Next, let&#39;s make <code>spec/cljx/myproject/</code> folder and add <code>shared_file_spec.cljx</code>.</p>
+
+<p>In <code>shared_file.cljx</code> add:</p>
+
+<div class="highlight"><pre><code class="clojure"><span class="lineno">1</span> <span class="p">(</span><span class="kd">ns </span><span class="nv">myproject.shared-file</span><span class="p">)</span>
+<span class="lineno">2</span> 
+<span class="lineno">3</span> <span class="p">(</span><span class="kd">defn </span><span class="nv">multiply</span> <span class="p">[</span><span class="nv">x</span> <span class="nv">y</span><span class="p">]</span>
+<span class="lineno">4</span>   <span class="p">(</span><span class="nb">* </span><span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
+<span class="lineno">5</span> <span class="p">)</span>
+</code></pre></div>
+
+<p>*</p>
+
+<p>In <code>shared_file_spec.cljx</code> add:</p>
+
+<div class="highlight"><pre><code class="clojure"><span class="lineno"> 1</span> <span class="p">(</span><span class="kd">ns </span><span class="nv">myproject.shared-file-spec</span>
+<span class="lineno"> 2</span>   <span class="p">(</span><span class="o">#</span><span class="nv">+clj</span> <span class="ss">:require</span> <span class="o">#</span><span class="nv">+cljs</span> <span class="ss">:require-macros</span> <span class="p">[</span><span class="nv">speclj.core</span> <span class="ss">:refer</span> <span class="p">[</span><span class="nv">describe</span> <span class="nv">it</span> <span class="nv">should=</span><span class="p">]])</span>
+<span class="lineno"> 3</span>   <span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">speclj.core</span><span class="p">]</span>
+<span class="lineno"> 4</span>             <span class="p">[</span><span class="nv">myproject.shared-file</span> <span class="ss">:as</span> <span class="nv">shared-file</span><span class="p">]))</span>
+<span class="lineno"> 5</span> 
+<span class="lineno"> 6</span> <span class="p">(</span><span class="nf">describe</span> <span class="s">&quot;sample cljx file&quot;</span>
+<span class="lineno"> 7</span> 
+<span class="lineno"> 8</span>    <span class="p">(</span><span class="nf">it</span> <span class="s">&quot;uses cljx files to generate tested code in clj an cljx&quot;</span>
+<span class="lineno"> 9</span>       <span class="p">(</span><span class="nf">should=</span> <span class="mi">12</span> <span class="p">(</span><span class="nf">shared-file/multiply</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">)))</span>
+<span class="lineno">10</span> <span class="p">)</span>
+</code></pre></div>
+
+<p>As you can see, the spec file includes <code>#+clj</code> and <code>#+cljs</code> tags. For this file, that means that cljx will add <code>:require</code> to the clojure version of the file and <code>:require-macros</code> to the Clojure version of the file.  These tags will include or exclude the entire form that follows them.  So one tag can include/exclude an entire function.</p>
+
+<h1>Run our Tests with A CLJX file</h1>
+
+<p>Now that we have cljx set up and a <code>.cljx</code> file and test file, we can run <code>lein clj-clean-test</code> and <code>lein cljs-clean-test</code>.  Both should evaluate the <code>multiply</code> test included in the single <code>.cljx</code> file.</p>
+
+<h1>Where We Are</h1>
+
+<p>Now we have a single <code>.cljx</code> source and spec file that will be generated into separate <code>.clj</code> and <code>.cljs</code> files.  And we can our code in both Clojure and ClojureScript.  In [Part 5][part_5] we will finall get to writing some code that will help us build one functional source for Clojure and Clojurescript.</p>
+
+<hr>
+
+<p>For reference, here is a look at the final <code>project.clj</code> file:</p>
 
 <div class="highlight"><pre><code class="clojure"><span class="lineno"> 1</span> <span class="p">(</span><span class="kd">defproject </span><span class="nv">myproject</span> <span class="s">&quot;0.1.0-SNAPSHOT&quot;</span>
 <span class="lineno"> 2</span>   <span class="ss">:description</span> <span class="s">&quot;Combining Clojure and ClojureScript Libraries&quot;</span>
 <span class="lineno"> 3</span> 
 <span class="lineno"> 4</span>     <span class="ss">:dependencies</span> <span class="p">[[</span><span class="nv">org.clojure/clojure</span> <span class="s">&quot;1.5.1&quot;</span><span class="p">]</span>
-<span class="lineno"> 5</span>                      <span class="p">[</span><span class="nv">speclj</span> <span class="s">&quot;2.9.4&quot;</span><span class="p">]]</span>
-<span class="lineno"> 6</span> 
-<span class="lineno"> 7</span>     <span class="ss">:plugins</span> <span class="p">[[</span><span class="nv">speclj</span> <span class="s">&quot;6.9.4&quot;</span><span class="p">]]</span>
+<span class="lineno"> 5</span>                    <span class="p">[</span><span class="nv">speclj</span> <span class="s">&quot;2.9.4&quot;</span><span class="p">]</span>
+<span class="lineno"> 6</span>                    <span class="p">[</span><span class="nv">com.keminglabs/cljx</span> <span class="s">&quot;0.3.1&quot;</span><span class="p">]</span>
+<span class="lineno"> 7</span>                    <span class="p">]]</span>
 <span class="lineno"> 8</span> 
-<span class="lineno"> 9</span>     <span class="ss">:aliases</span> <span class="p">{</span>  <span class="s">&quot;clj-test&quot;</span> <span class="p">[</span><span class="s">&quot;with-profile&quot;</span>,<span class="s">&quot;clj&quot;</span>,<span class="s">&quot;spec&quot;</span><span class="p">]</span>
-<span class="lineno">10</span>                 <span class="s">&quot;clj-test-auto&quot;</span>  <span class="p">[</span><span class="s">&quot;with-profile&quot;</span>,<span class="s">&quot;clj&quot;</span>,<span class="s">&quot;spec&quot;</span>, <span class="s">&quot;-a&quot;</span><span class="p">]</span>
-<span class="lineno">11</span>                 <span class="s">&quot;cljs-test&quot;</span> <span class="p">[</span><span class="s">&quot;with-profile&quot;</span>,<span class="s">&quot;cljs&quot;</span>, <span class="s">&quot;cljsbuild&quot;</span>, <span class="s">&quot;test&quot;</span><span class="p">]</span>
-<span class="lineno">12</span>                 <span class="s">&quot;cljs-test-auto&quot;</span> <span class="p">[</span><span class="s">&quot;with-profile&quot;</span>,<span class="s">&quot;cljs&quot;</span>, <span class="s">&quot;cljsbuild&quot;</span>, <span class="s">&quot;auto&quot;</span><span class="p">]</span>
-<span class="lineno">13</span>             <span class="p">}</span>
-<span class="lineno">14</span> 
-<span class="lineno">15</span> 
-<span class="lineno">16</span>     <span class="ss">:profiles</span> <span class="p">{</span>
-<span class="lineno">17</span>          <span class="ss">:dev</span> <span class="p">{</span> <span class="p">}</span>
+<span class="lineno"> 9</span>     <span class="ss">:plugins</span> <span class="p">[[</span><span class="nv">speclj</span> <span class="s">&quot;6.9.4&quot;</span><span class="p">]]</span>
+<span class="lineno">10</span> 
+<span class="lineno">11</span>     <span class="ss">:aliases</span> <span class="p">{</span>  <span class="s">&quot;clj-test&quot;</span> <span class="p">[</span><span class="s">&quot;with-profile&quot;</span>,<span class="s">&quot;clj&quot;</span>,<span class="s">&quot;spec&quot;</span><span class="p">]</span>
+<span class="lineno">12</span>                 <span class="s">&quot;clj-clean-test&quot;</span> <span class="p">[</span><span class="s">&quot;do&quot;</span> <span class="s">&quot;clean,&quot;</span> <span class="s">&quot;clj-test&quot;</span><span class="p">]</span>
+<span class="lineno">13</span>                 <span class="s">&quot;cljs-test&quot;</span> <span class="p">[</span><span class="s">&quot;with-profile&quot;</span>,<span class="s">&quot;cljs&quot;</span>, <span class="s">&quot;cljsbuild&quot;</span>, <span class="s">&quot;test&quot;</span><span class="p">]</span>
+<span class="lineno">14</span>                 <span class="s">&quot;cljs-clean-test&quot;</span> <span class="p">[</span><span class="s">&quot;do&quot;</span> <span class="s">&quot;clean,&quot;</span> <span class="s">&quot;cljs-test&quot;</span><span class="p">]</span>
+<span class="lineno">15</span>                 <span class="s">&quot;all-tests&quot;</span> <span class="p">[</span><span class="s">&quot;do&quot;</span> <span class="s">&quot;clean,&quot;</span> <span class="s">&quot;clj-test,&quot;</span> <span class="s">&quot;cljs-test&quot;</span><span class="p">]</span>
+<span class="lineno">16</span>             <span class="p">}</span>
+<span class="lineno">17</span> 
 <span class="lineno">18</span> 
-<span class="lineno">19</span>          <span class="ss">:clj</span> <span class="p">{</span>
-<span class="lineno">20</span>              <span class="ss">:source-paths</span> <span class="p">[</span><span class="s">&quot;src/clj&quot;</span><span class="p">]</span>
-<span class="lineno">21</span>              <span class="ss">:test-paths</span> <span class="p">[</span><span class="s">&quot;spec/clj&quot;</span><span class="p">]</span>
-<span class="lineno">22</span>          <span class="p">}</span>
-<span class="lineno">23</span> 
-<span class="lineno">24</span>          <span class="ss">:cljs</span> <span class="p">{</span><span class="ss">:dependencies</span> <span class="p">[[</span><span class="nv">org.clojure/clojurescript</span> <span class="s">&quot;0.0-2014&quot;</span><span class="p">]</span> <span class="c1">;necessary for current version of speclj</span>
-<span class="lineno">25</span>                                <span class="p">[</span><span class="nv">org.clojure/tools.reader</span> <span class="s">&quot;0.7.10&quot;</span><span class="p">]</span> <span class="c1">;necessary for current version of speclj</span>
-<span class="lineno">26</span>                                <span class="p">[</span><span class="nv">lein-cljsbuild</span> <span class="s">&quot;1.0.2&quot;</span><span class="p">]]</span>
-<span class="lineno">27</span>                <span class="ss">:plugins</span> <span class="p">[[</span><span class="nv">lein-cljsbuild</span> <span class="s">&quot;1.0.2&quot;</span><span class="p">]]</span>
-<span class="lineno">28</span> 
-<span class="lineno">29</span>                <span class="ss">:cljsbuild</span> <span class="o">~</span><span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">run-specs</span> <span class="p">[</span><span class="s">&quot;bin/speclj&quot;</span> <span class="s">&quot;target/tests.js&quot;</span><span class="p">]]</span>
-<span class="lineno">30</span>                    <span class="p">{</span><span class="ss">:builds</span>
-<span class="lineno">31</span>                        <span class="p">{</span><span class="ss">:dev</span> <span class="p">{</span><span class="ss">:source-paths</span> <span class="p">[</span><span class="s">&quot;src/cljs&quot;</span>  <span class="s">&quot;spec/cljs&quot;</span><span class="p">]</span>
-<span class="lineno">32</span>                               <span class="ss">:compiler</span> <span class="p">{</span><span class="ss">:output-to</span> <span class="s">&quot;target/tests.js&quot;</span>
-<span class="lineno">33</span>                                          <span class="ss">:pretty-print</span> <span class="nv">true</span><span class="p">}</span>
-<span class="lineno">34</span>                               <span class="ss">:notify-command</span> <span class="nv">run-specs</span><span class="p">}}</span>
-<span class="lineno">35</span>                <span class="ss">:test-commands</span> <span class="p">{</span><span class="s">&quot;test&quot;</span> <span class="nv">run-specs</span><span class="p">}})</span>
-<span class="lineno">36</span> 
-<span class="lineno">37</span>               <span class="p">}</span>
-<span class="lineno">38</span>         <span class="p">}</span>
-<span class="lineno">39</span> <span class="p">)</span>
+<span class="lineno">19</span>     <span class="ss">:profiles</span> <span class="p">{</span>
+<span class="lineno">20</span> 
+<span class="lineno">21</span>          <span class="ss">:clj</span> <span class="p">{</span>
+<span class="lineno">22</span>                 <span class="ss">:source-paths</span> <span class="p">[</span><span class="s">&quot;src/clj&quot;</span>, <span class="s">&quot;target/generated/src/clj&quot;</span><span class="p">]</span>
+<span class="lineno">23</span>                 <span class="ss">:test-paths</span> <span class="p">[</span><span class="s">&quot;spec/clj&quot;</span>, <span class="s">&quot;target/generated/spec/clj&quot;</span><span class="p">]</span>
+<span class="lineno">24</span>          <span class="p">}</span>
+<span class="lineno">25</span> 
+<span class="lineno">26</span>          <span class="ss">:cljs</span> <span class="p">{</span><span class="ss">:dependencies</span> <span class="p">[[</span><span class="nv">org.clojure/clojurescript</span> <span class="s">&quot;0.0-2014&quot;</span><span class="p">]</span> <span class="c1">;necessary for current version of speclj</span>
+<span class="lineno">27</span>                                <span class="p">[</span><span class="nv">org.clojure/tools.reader</span> <span class="s">&quot;0.7.10&quot;</span><span class="p">]</span> <span class="c1">;necessary for current version of speclj</span>
+<span class="lineno">28</span>                                <span class="p">[</span><span class="nv">lein-cljsbuild</span> <span class="s">&quot;1.0.2&quot;</span><span class="p">]]</span>
+<span class="lineno">29</span>                <span class="ss">:plugins</span> <span class="p">[[</span><span class="nv">lein-cljsbuild</span> <span class="s">&quot;1.0.2&quot;</span><span class="p">]]</span>
+<span class="lineno">30</span> 
+<span class="lineno">31</span>                <span class="ss">:cljsbuild</span> <span class="o">~</span><span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">run-specs</span> <span class="p">[</span><span class="s">&quot;bin/speclj&quot;</span> <span class="s">&quot;target/tests.js&quot;</span><span class="p">]]</span>
+<span class="lineno">32</span>                    <span class="p">{</span><span class="ss">:builds</span>
+<span class="lineno">33</span>                        <span class="p">{</span><span class="ss">:dev</span> <span class="p">{</span><span class="ss">:source-paths</span> <span class="p">[</span><span class="s">&quot;src/cljs&quot;</span>
+<span class="lineno">34</span>                                              <span class="s">&quot;spec/cljs&quot;</span>
+<span class="lineno">35</span>                                              <span class="s">&quot;target/generated/src/cljs&quot;</span>
+<span class="lineno">36</span>                                              <span class="s">&quot;target/generated/spec/cljs&quot;</span><span class="p">]</span>
+<span class="lineno">37</span>                               <span class="ss">:compiler</span> <span class="p">{</span><span class="ss">:output-to</span> <span class="s">&quot;target/tests.js&quot;</span>
+<span class="lineno">38</span>                                          <span class="ss">:pretty-print</span> <span class="nv">true</span><span class="p">}</span>
+<span class="lineno">39</span>                               <span class="ss">:notify-command</span> <span class="nv">run-specs</span><span class="p">}}</span>
+<span class="lineno">40</span>                <span class="ss">:test-commands</span> <span class="p">{</span><span class="s">&quot;test&quot;</span> <span class="nv">run-specs</span><span class="p">}})</span>
+<span class="lineno">41</span> 
+<span class="lineno">42</span>               <span class="p">}</span>
+<span class="lineno">43</span>         <span class="p">}</span>
+<span class="lineno">44</span> 
+<span class="lineno">45</span>     <span class="ss">:hooks</span> <span class="p">[</span><span class="nv">cljx.hooks</span><span class="p">]</span>
+<span class="lineno">46</span>     <span class="ss">:cljx</span> <span class="p">{</span><span class="ss">:builds</span> <span class="p">[{</span><span class="ss">:source-paths</span> <span class="p">[</span><span class="s">&quot;src/cljx&quot;</span><span class="p">]</span>
+<span class="lineno">47</span>                      <span class="ss">:output-path</span> <span class="s">&quot;target/generated/src/clj&quot;</span>
+<span class="lineno">48</span>                      <span class="ss">:rules</span> <span class="ss">:clj</span><span class="p">}</span>
+<span class="lineno">49</span>                     <span class="p">{</span><span class="ss">:source-paths</span> <span class="p">[</span><span class="s">&quot;src/cljx&quot;</span><span class="p">]</span>
+<span class="lineno">50</span>                      <span class="ss">:output-path</span> <span class="s">&quot;target/generated/src/cljs&quot;</span>
+<span class="lineno">51</span>                      <span class="ss">:rules</span> <span class="ss">:cljs</span><span class="p">}</span>
+<span class="lineno">52</span>                     <span class="p">{</span><span class="ss">:source-paths</span> <span class="p">[</span><span class="s">&quot;spec/cljx&quot;</span><span class="p">]</span>
+<span class="lineno">53</span>                      <span class="ss">:output-path</span> <span class="s">&quot;target/generated/spec/clj&quot;</span>
+<span class="lineno">54</span>                      <span class="ss">:rules</span> <span class="ss">:clj</span><span class="p">}</span>
+<span class="lineno">55</span>                     <span class="p">{</span><span class="ss">:source-paths</span> <span class="p">[</span><span class="s">&quot;spec/cljx&quot;</span><span class="p">]</span>
+<span class="lineno">56</span>                      <span class="ss">:output-path</span> <span class="s">&quot;target/generated/spec/cljs&quot;</span>
+<span class="lineno">57</span>                      <span class="ss">:rules</span> <span class="ss">:cljs</span><span class="p">}]}</span>
+<span class="lineno">58</span> 
+<span class="lineno">59</span> <span class="p">)</span>
 </code></pre></div>
-
-<p>Now we can manipulate the two classpaths independently of each other.  However, you should still be wary of the fact that the two paths will have to get along somewhat when we put everything together.  This is especially the case for .clj files in your :cljs profile.  With separate profiles you can two different .clj files with the exact same name - one in the clj profile path and the other in the cljs profile path.  Only a single file-name.clj can exist when we combine the paths.</p>
-
-<h1>Generating Code using CLJX:</h1>
-
-<p>Next, we&#39;ll use the CLJX library.  CLJX translates a .cljx files into separate cljs and clj files.  You can use small #+cljs an #+clj tags to differentiate which forms you would like to be in which version.  In the 8th Light Speclj project, CLJX replaced our hand-rolled pre-compiler.  this gave us the benefit of relying on an open-source, updated dependency instead of our own little program.  </p>
-
-<p>lets configure it:</p>
-
-<p>-project.clj changes
--note location of information</p>
-
-<p>However, CLJX can be a little tricky.  The hardest part may be just keeping everything straight.  All shared clj and cljs files must be renamed as .cljx files.  Normally, these files will be in your src file just like the other source files.  However, they will generate .clj and cljs files in a separate location, normal something like target/generated/.  So now some your “true” source code is in your src file while a good amount could be in your target/generated file.   This also means that your project.clj src and test maps will have to be updated with your target/generated equivalents.</p>
-
-<h1>Using Platform Files to Generate Polymorphic Action:</h1>
-
-<p>For most Clojure/ClojureScript discrepancies, a platform dependency will do the trick.  Make two files with the same name - one a .clj and the other .cljs.  Add them to their respective src folders.  For any Clojure/ClojureScript discrepancy add matching functions to each file and implement the platform’s version of that functionality.  </p>
-
-<p>For most cases you can simply :require the file, although it’s best if you use an alias since ClojureScript effectively requires aliases for its imports.  Clojure will obviously find the .clj version of your platform file and run based off of that.  ClojureScript will do the same for the .cljs file.  Here are a few examples:</p>
-
-<ul>
-<li>throw error</li>
-<li>add</li>
-</ul>
-
-<h1>When All Else Fails, Add an IF:</h1>
-
-<p>But some issues can’t be brushed away through runtime polymorphism.  For example, a Throwable is required to be defined at Compile time.  Our previous platform strategy won’t work.  Instead we’ll be limited to macros and we’ll nefariously switch compile time object types during macro expansion.  We’ll do this by determining if a macro file is expanding in a clojure or clojurescript context.  This is the necessary-hack portion of the how-to. </p>
-
-<p>We’ll determine the macro expansion context by simply checking to see if a file necessary to cljs compilation is present.  This is fragile since that file could change or something, really anything could change the feedback for the if statement leaving us with a broken program.  But such life in the land of ClojureScript.  Here is an example of what might work:</p>
-
-<ul>
-<li>cljs hack</li>
-</ul>
-
-<p>So here, we’re seeing if we can find the cljs.analyzer namespace and choose which compile-time pieces to add to our macros based off of that result.</p>
-
-<p>Of course clojure macros are a monster in themselves but for this how-to you really don’t need to know much other than that the form after the tilde will be evaluated during expansion time, meaning that at compile time the if statement will be gone and the only thing that will remain will be the result of that if statement.  So by compile time all that should be left is exactly what we want for each platform.  Here is an example using the Throwable object in Java.</p>
-
-<ul>
-<li>throwable</li>
-</ul>
-
-<h1>NS-Resolve Your Last Concerns Away</h1>
-
-<p>So we’re so close to being done but you might run into one additional problem.  What if the cljs part of your (cljs?) hack references a cljs file?  clojure will attempt to find the namespace before the if statement is evaluated, thus you’ll get a compile time error.  Here is an example of this error:</p>
-
-<p>-cljs-compiler issue</p>
-
-<p>We can get around this by using “ns-resolve”  with a namespace and function argument.  Now the cljs.compiler namespace will not need to be resolved until runtime and only when it runs.  Since that code shouldn’t be called in the first place.  </p>
-
-<h1>Combining it All into One:</h1>
-
-<p>So now things finally work.  Let’s combine them into one jar and see if it runs in both clojure and clojurescript.  For this we’ll create a production profile that will combine our clj and cljs files.  </p>
 
 </div>
 
