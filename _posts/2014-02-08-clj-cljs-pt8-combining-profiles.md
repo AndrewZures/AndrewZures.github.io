@@ -7,8 +7,13 @@ categories: jekyll update
 
 [8thLight]: https://8thlight.com
 [speclj]:    https://github.com/slagyr/speclj 
+[sample_project]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/one_jar
 
 ------
+
+Here is [Sample Project][sample_project] with working code and tests through this part (Part 7) of the tutorial.
+
+#Adding Clojure and ClojureScript Code to a Single Jar
 
 In the previous parts of this tutorial we've built a code base that can deliver the same functionality in both Clojure and ClojureScript.  Now we'll see how we can deploy this functionality in one Jar.  This gives others the ability to import one library and gain your clj and cljs functionality.
 

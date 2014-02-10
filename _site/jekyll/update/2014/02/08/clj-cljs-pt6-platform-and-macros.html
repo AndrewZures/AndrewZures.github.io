@@ -25,17 +25,22 @@
 <p class="meta">08 Feb 2014</p>
 
 <div class="post">
+<p>Here is <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/macro_dependency">Sample Project</a> with working code and tests through this part (Part 6) of the tutorial.</p>
+
 <h1>Using Platform Files with Macros</h1>
 
-<p>In [Part 5][part_5] we used separate <code>.clj</code> and <code>.cljs</code> files with the same namespace name to isolate the platform differences between Clojure and ClojureScript.  But what if we want to use these files in macros?  You can still use these files in macros but there are a few tweaks needed to our previous platform strategy.</p>
+<p>In <a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt5-platform.html">Part 5</a> we used separate <code>.clj</code> and <code>.cljs</code> files with the same namespace name to isolate the platform differences between Clojure and ClojureScript.  But what if we want to use these files in macros?  You can still use these files in macros but there are a few tweaks needed to our previous platform strategy.</p>
 
 <p>The issue with macros is that there will be no equivalent <code>.cljs</code> macro file.  Most macros will stay on the Clojure side of your project. Let&#39;s take a look at an example.</p>
+
+<h1>Platform Files and Macros: An Example</h1>
 
 <p>Let&#39;s add a new test to our <code>shared_file.cljx</code> file which will test a simple macro.</p>
 
 <p>Create a <code>macro.clj</code> file in your <code>src/clj/myproject/</code> folder. You can leave it empty for now.</p>
 
-<p>Next, add the dependency to your <code>shared_file_spec.cljx</code> under <code>:require-macros</code>. Your namespace should now look like this:</p>
+<p>Next, add the dependency to your <code>shared_file_spec.cljx</code> under <code>:require-macros</code>. 
+Your namespace should now look like this:</p>
 
 <div class="highlight"><pre><code class="clojure"><span class="lineno">1</span> <span class="p">(</span><span class="kd">ns </span><span class="nv">myproject.shared-file-spec</span>
 <span class="lineno">2</span>     <span class="p">(</span><span class="o">#</span><span class="nv">+clj</span> <span class="ss">:require</span> <span class="o">#</span><span class="nv">+cljs</span> <span class="ss">:require-macros</span>
@@ -46,7 +51,7 @@
 <span class="lineno">7</span> <span class="p">)</span>
 </code></pre></div>
 
-<p>Now add a new test that will evaluate an <code>abs</code> function located in your macro file</p>
+<p>For this example, we&#39;ll test add our existing <code>platform/abs</code> function to a macro.  Add a new test that will evaluate an <code>abs</code> function located in your macro file</p>
 
 <div class="highlight"><pre><code class="clojure"><span class="lineno">1</span>   <span class="p">(</span><span class="nf">it</span> <span class="s">&quot;finds absolute value using macro&quot;</span>
 <span class="lineno">2</span>         <span class="p">(</span><span class="nf">should=</span> <span class="mi">2</span> <span class="p">(</span><span class="nf">macros/abs</span> <span class="mi">-2</span><span class="p">)))</span>
@@ -54,7 +59,7 @@
 
 <p>So now we have a test but it won&#39;t pass since we have nothing in our <code>macro.clj</code> file</p>
 
-<p>Let&#39;s now add a namespace and simple <code>abs</code> function to our macro file.</p>
+<p>Let&#39;s now add a namespace and simple <code>abs</code> function to <code>macro.clj</code>.</p>
 
 <div class="highlight"><pre><code class="clojure"><span class="lineno">1</span> <span class="p">(</span><span class="kd">ns </span><span class="nv">myproject.macros</span>
 <span class="lineno">2</span>   <span class="c1">;(:require [myproject.platform]) ;uncommenting will break cljs tests</span>
@@ -64,15 +69,17 @@
 <span class="lineno">6</span>       <span class="o">`</span><span class="p">(</span><span class="nf">myproject.platform/abs</span> <span class="o">~</span><span class="nv">x</span><span class="p">))</span>
 </code></pre></div>
 
-<p>Now here is where things get interesting.  As you can see the <code>:require</code> statement is commented out and our macro function uses a fully qualified namespace.  It seems like our macro might not be able to find the platform namespace.  But let&#39;s run our tests.</p>
+<p>Now here is where things get interesting.  As you can see we&#39;ve commmented out the  <code>:require</code> statement and our macro function uses a fully qualified namespace.  It seems like our macro might not be able to find the platform namespace.  But let&#39;s run our tests.</p>
 
 <p>They should pass!</p>
 
-<p>It seems like we should <code>:require</code> our platform namespace since the file uses it, but this will actually break the ClojureScript-side tests.  This is because the macro file will always attempt to evaluate the <code>.clj</code> version of your platform file if it is defined in the <code>:require</code> namespace.  By using a fully-qualified namespace in your macro instead of referencing it through a <code>:require</code> statement, the correct platform file will be evaluated at macro expansion.  So, in this case, you should not require the platform file but instead use its fully-qualified namespace where it is needed.</p>
+<p>Now uncomment the <code>:require</code> statement and rerun your tests.  Your ClojureScript tests will fail to run!</p>
+
+<p>It seems like we should <code>:require</code> our platform namespace since the file uses it, but this will actually break the ClojureScript-side tests.  This is because the macro file will always attempt to evaluate the <code>.clj</code> version of our platform file if it is defined in the <code>:require</code> namespace.  By using a fully-qualified namespace in our macro instead of referencing it through a <code>:require</code> statement, the correct platform file will be evaluated at macro expansion.  So, in this case, you should not require the platform file but instead use its fully-qualified namespace where it is needed.</p>
 
 <h1>Where We&#39;re At</h1>
 
-<p>Now we&#39;ve seen how to use platform files to isolate platform difference in both normal functions and clojure macros.  These platform files can get you far, but they don&#39;t get you all the way there.  In [Part 7[part_7] we&#39;ll see how to use an ugly but effective &quot;if&quot; statement to get essentially complete cross-platform functionality.</p>
+<p>Now we&#39;ve seen how to use platform files to isolate platform difference in both normal functions and clojure macros.  These platform files can get you far, but they don&#39;t get you all the way there.  In <a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt7-if-macros.html">Part 7</a> we&#39;ll see how to use an ugly but effective &quot;if&quot; statement to get essentially complete cross-platform functionality.</p>
 
 </div>
 

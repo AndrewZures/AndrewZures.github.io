@@ -7,10 +7,19 @@ categories: jekyll update
 
 [8thLight]: https://8thlight.com
 [speclj]:    https://github.com/slagyr/speclj 
+[sample_project]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/throwable
+[clojure_documentation]: http://clojuredocs.org/clojure_core/1.2.0/clojure.core/try
+[part_8]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/macro_dependenc://github.com/AndrewZures/combining_clj_cljs_libraries/tree/one_jar 
+
+Here is [Sample Project][sample_project] with working code and tests through this part (Part 7) of the tutorial.
 
 #Using a Fragile "If" Statement to Get a Bit More Functionality
 
-In the previous portion of this tutorial, we were able to get a great deal of cross-platform functionality using platform files. But now we'll look at a way to fully define a clojure macro using a very fragile if statemnt.  First, let's look at an example:
+In the previous portion of this tutorial, we were able to get a great deal of cross-platform functionality using platform files. But now we'll look at a way to define a clojure macro with platform-specific code, using a very fragile if statement.  
+
+First, let's look at an example:
+
+#Fragile If: An Example
 
 In your `shared_file_spec.cljx` files add this test:
 
@@ -64,9 +73,21 @@ As you can see it determines if the file is running in a ClojureScript context i
  )
 {% endhighlight %}
 
-If we try this macro, it will pass the tests for both platforms.  It does this by adding the correct platform-specific catch statement during macro expansion.  This may seem like it opened up an amazing set of functionality but the if statement is fragile.  It relies on the existence (or lack thereof) of a ClojureScript specific namespace.  If something changed in ClojureScript, the entire library could fail.  Thus this is a bit of hack.  But it gets us where we want to go and there are few other options.  
+If we try this macro, it will pass the tests for both platforms.  It does this by adding the correct platform-specific catch statement during macro expansion.  This may seem like it has opened up an amazing set of functionality but the if statement is fragile.  It relies on the existence (or lack thereof) of a ClojureScript specific namespace.  If something changed in ClojureScript, the entire library could fail.  Thus this is a bit of hack.  But it gets us where we want to go and there are few other options.  
+
+#ns-resolve Can Help Too
+
+As a brief side note.  The hack noted above will still fail if the clojure compiler cannot recognize the name of a currently absent ClojureScript namespace. An example is `cljs.compiler/munge`. If this included in a `.clj` macro, your Clojure-side tests will fails because Clojure will not find the namespace.  
+
+However we can get around this using `ns-resolve`.  Instead of referencing `cljs.compiler/munge` we can replace it with:
+
+{% highlight clojure linenos %}
+(ns-reolve 'cljs.compiler "munge")
+{% endhighlight %}
+
+This will remove the compile check of the `cljs.compiler` namespace.
 
 #Where We're At
-So now we've seen how to use platform files to isolate platform-specific code and we've also seen a little hack that can help when macros must be defined a certain way during macro expansion.  In [Part 8][part_8] of this tutorial we'll put it all together, quite literally, and combine our Clojure and ClojureScript libraries into a single jar.
+So now we've seen how to use platform files to isolate platform-specific code and we've also seen a little hack that can help when macros must be defined a platform-specific manner.  In [Part 8][part_8] of this tutorial we'll put it all together, quite literally, and combine our Clojure and ClojureScript libraries into a single jar.
 
 

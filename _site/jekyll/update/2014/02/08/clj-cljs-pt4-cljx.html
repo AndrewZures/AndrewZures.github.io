@@ -25,6 +25,8 @@
 <p class="meta">08 Feb 2014</p>
 
 <div class="post">
+<p>Here is our continuing <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/cljx">Sample Project</a> with working code up to this part (Part 4) of the tutorial.</p>
+
 <h1>Working With CLJX:</h1>
 
 <p>Next, we&#39;ll use the <a href="https://github.com/lynaghk/cljx">CLJX</a> library.  CLJX translates a <code>.cljx</code> files into separate <code>.cljs</code> and <code>.clj</code> files.  You can use small <code>#+cljs</code> an <code>#+clj</code> tags to differentiate which forms you would like included in which version.  In the 8th Light <a href="https://github.com/slagyr/speclj">Speclj</a> project, CLJX replaced our hand-rolled pre-compiler.  this gave us the benefit of relying on an open-source, updated dependency instead of our own program.  </p>
@@ -35,7 +37,7 @@
 
 <h1>Adding CLJX to your Project.clj</h1>
 
-<p>To add <code>cljx</code> simply add <code>[com.keminglabs/cljx &quot;0.3.1&quot;]</code> to you general <code>:dependencies</code> map. You will then have to add configure src and output paths to the <code>:cljx</code> key:</p>
+<p>To add <a href="https://github.com/lynaghk/cljx">CLJX</a> simply add <code>[com.keminglabs/cljx &quot;0.3.1&quot;]</code> to you general <code>:dependencies</code> map. You will then have to add configure src and output paths to the <code>:cljx</code> key:</p>
 
 <div class="highlight"><pre><code class="clojure"><span class="lineno"> 1</span>     <span class="ss">:cljx</span> <span class="p">{</span><span class="ss">:builds</span> <span class="p">[{</span><span class="ss">:source-paths</span> <span class="p">[</span><span class="s">&quot;src/cljx&quot;</span><span class="p">]</span>
 <span class="lineno"> 2</span>                      <span class="ss">:output-path</span> <span class="s">&quot;target/generated/src/clj&quot;</span>
@@ -81,6 +83,8 @@
 <span class="lineno">7</span>           <span class="ss">:notify-command</span> <span class="nv">run-specs</span><span class="p">}</span>
 </code></pre></div>
 
+<h1>Making Things Easy with Aliases</h1>
+
 <p>We&#39;re almost done.  With cljx <code>hooks</code> in your <code>project.clj</code>, cljx will auto-generate files before you run you Clojure tests.  However, for ClojureScript we&#39;ll have to test leiningen to compile before we run tests.  We can do this easily by changing our <code>cljs-test</code> alias:</p>
 
 <div class="highlight"><pre><code class="clojure"><span class="lineno">1</span>    <span class="ss">:aliases</span> <span class="p">{</span> <span class="s">&quot;cljs-test&quot;</span> <span class="p">[</span><span class="s">&quot;do&quot;</span> <span class="s">&quot;cljx,&quot;</span> <span class="s">&quot;with-profile&quot;</span> <span class="s">&quot;cljs&quot;</span> <span class="s">&quot;cljsbuild&quot;</span> <span class="s">&quot;test&quot;</span><span class="p">]</span> <span class="p">}</span>
@@ -102,9 +106,9 @@
 
 <h1>Adding a .cljx File to your Project</h1>
 
-<p>If you are using the [sample project][sample_project] you&#39;ll see that the we already have <code>src/clj/myproject/core.clj</code> and <code>src/cljs/myproject/core.cljs</code>.  We&#39;ll create a similar structure for your <code>.cljx</code> files.  </p>
+<p>If you are using the <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/cljx">sample project</a> you&#39;ll see that the we already have <code>src/clj/myproject/core.clj</code> and <code>src/cljs/myproject/core.cljs</code>.  We&#39;ll create a similar directory structure for the <code>.cljx</code> files.  </p>
 
-<p>Let&#39;s make <code>src/cljx/myproject/</code> folder and add <code>shared_file.cljx</code> to the new folder.  Next, let&#39;s make <code>spec/cljx/myproject/</code> folder and add <code>shared_file_spec.cljx</code>.</p>
+<p>Let&#39;s make a <code>src/cljx/myproject/</code> folder and add <code>shared_file.cljx</code> to the new folder.  Next, let&#39;s make a <code>spec/cljx/myproject/</code> folder and add <code>shared_file_spec.cljx</code>.</p>
 
 <p>In <code>shared_file.cljx</code> add:</p>
 
@@ -140,6 +144,35 @@
 <h1>Where We Are</h1>
 
 <p>Now we have a single <code>.cljx</code> source and spec file that will be generated into separate <code>.clj</code> and <code>.cljs</code> files.  And we can our code in both Clojure and ClojureScript.  In [Part 5][part_5] we will finall get to writing some code that will help us build one functional source for Clojure and Clojurescript.</p>
+
+<hr>
+
+<p>For reference, here is (very) basic look at our project structure</p>
+
+<div class="highlight"><pre><code class="clojure"><span class="nv">myproject</span>
+   <span class="err">|</span>
+   <span class="err">|</span><span class="nv">---</span> <span class="nv">test</span>
+   <span class="err">|</span>     <span class="err">|</span><span class="nv">---</span> <span class="nv">clj</span>
+   <span class="err">|</span>     <span class="err">|</span>    <span class="err">|</span><span class="nv">---</span> <span class="nv">myproject</span>
+   <span class="err">|</span>     <span class="err">|</span>            <span class="err">|</span><span class="nv">---</span> <span class="nv">test-code.clj</span>
+   <span class="err">|</span>     <span class="err">|</span><span class="nv">---</span> <span class="nv">cljs</span>
+   <span class="err">|</span>     <span class="err">|</span>     <span class="err">|</span><span class="nv">---</span> <span class="nv">myproject</span>
+   <span class="err">|</span>     <span class="err">|</span>             <span class="err">|</span><span class="nv">---</span> <span class="nv">test-code.cljs</span>
+   <span class="err">|</span>     <span class="err">|</span><span class="nv">---</span> <span class="nv">cljx</span>
+   <span class="err">|</span>           <span class="err">|</span><span class="nv">---</span> <span class="nv">myproject</span>
+   <span class="err">|</span>                   <span class="err">|</span><span class="nv">---</span> <span class="nv">test-code.cljx</span>
+   <span class="err">|</span>
+   <span class="err">|</span><span class="nv">---</span> <span class="nv">src</span>
+         <span class="err">|</span><span class="nv">---</span> <span class="nv">clj</span>
+         <span class="err">|</span>     <span class="err">|</span><span class="nv">---</span> <span class="nv">myproject</span>
+         <span class="err">|</span>             <span class="err">|</span><span class="nv">---</span> <span class="nv">source-code.clj</span>
+         <span class="err">|</span><span class="nv">---</span> <span class="nv">cljs</span>
+         <span class="err">|</span>     <span class="err">|</span><span class="nv">---</span> <span class="nv">myproject</span>
+         <span class="err">|</span>             <span class="err">|</span><span class="nv">---</span> <span class="nv">source-code.cljs</span>
+         <span class="err">|</span><span class="nv">---</span> <span class="nv">cljx</span>
+               <span class="err">|</span><span class="nv">---</span> <span class="nv">myproject</span>
+                       <span class="err">|</span><span class="nv">---</span> <span class="nv">source-code.cljx</span>
+</code></pre></div>
 
 <hr>
 

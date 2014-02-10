@@ -25,9 +25,15 @@
 <p class="meta">08 Feb 2014</p>
 
 <div class="post">
+<p>Here is <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/throwable">Sample Project</a> with working code and tests through this part (Part 7) of the tutorial.</p>
+
 <h1>Using a Fragile &quot;If&quot; Statement to Get a Bit More Functionality</h1>
 
-<p>In the previous portion of this tutorial, we were able to get a great deal of cross-platform functionality using platform files. But now we&#39;ll look at a way to fully define a clojure macro using a very fragile if statemnt.  First, let&#39;s look at an example:</p>
+<p>In the previous portion of this tutorial, we were able to get a great deal of cross-platform functionality using platform files. But now we&#39;ll look at a way to define a clojure macro with platform-specific code, using a very fragile if statement.  </p>
+
+<p>First, let&#39;s look at an example:</p>
+
+<h1>Fragile If: An Example</h1>
 
 <p>In your <code>shared_file_spec.cljx</code> files add this test:</p>
 
@@ -35,7 +41,7 @@
 <span class="lineno">2</span>    <span class="p">(</span><span class="nf">should=</span> <span class="nv">true</span> <span class="p">(</span><span class="nf">macros/slurpable-file?</span> <span class="s">&quot;badfilename&quot;</span><span class="p">)))</span>
 </code></pre></div>
 
-<p>In this test, we&#39;re attempting to <code>slurp</code> a bad file name.  In both Clojure and ClojureScript, this will raise an exception.  But exceptions are a little different in Java and JavaScript.  Java will require an <code>Exception</code> while JavaScript will use a <code>js/Ojbect</code>. You can see the [Clojure documentation][clojure_documentation] for an example of both situations.</p>
+<p>In this test, we&#39;re attempting to <code>slurp</code> a bad file name.  In both Clojure and ClojureScript, this will raise an exception.  But exceptions are a little different in Java and JavaScript.  Java will require an <code>Exception</code> while JavaScript will use a <code>js/Ojbect</code>. You can see the <a href="http://clojuredocs.org/clojure_core/1.2.0/clojure.core/try">Clojure documentation</a> for an example of both situations.</p>
 
 <p>Let&#39;s see go to our <code>macros.clj</code> file and see what we can do to pass this test for both platform.</p>
 
@@ -76,11 +82,22 @@
 <span class="lineno">7</span>  <span class="p">)</span>
 </code></pre></div>
 
-<p>If we try this macro, it will pass the tests for both platforms.  It does this by adding the correct platform-specific catch statement during macro expansion.  This may seem like it opened up an amazing set of functionality but the if statement is fragile.  It relies on the existence (or lack thereof) of a ClojureScript specific namespace.  If something changed in ClojureScript, the entire library could fail.  Thus this is a bit of hack.  But it gets us where we want to go and there are few other options.  </p>
+<p>If we try this macro, it will pass the tests for both platforms.  It does this by adding the correct platform-specific catch statement during macro expansion.  This may seem like it has opened up an amazing set of functionality but the if statement is fragile.  It relies on the existence (or lack thereof) of a ClojureScript specific namespace.  If something changed in ClojureScript, the entire library could fail.  Thus this is a bit of hack.  But it gets us where we want to go and there are few other options.  </p>
+
+<h1>ns-resolve Can Help Too</h1>
+
+<p>As a brief side note.  The hack noted above will still fail if the clojure compiler cannot recognize the name of a currently absent ClojureScript namespace. An example is <code>cljs.compiler/munge</code>. If this included in a <code>.clj</code> macro, your Clojure-side tests will fails because Clojure will not find the namespace.  </p>
+
+<p>However we can get around this using <code>ns-resolve</code>.  Instead of referencing <code>cljs.compiler/munge</code> we can replace it with:</p>
+
+<div class="highlight"><pre><code class="clojure"><span class="lineno">1</span> <span class="p">(</span><span class="nf">ns-reolve</span> <span class="ss">&#39;cljs.compiler</span> <span class="s">&quot;munge&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>This will remove the compile check of the <code>cljs.compiler</code> namespace.</p>
 
 <h1>Where We&#39;re At</h1>
 
-<p>So now we&#39;ve seen how to use platform files to isolate platform-specific code and we&#39;ve also seen a little hack that can help when macros must be defined a certain way during macro expansion.  In [Part 8][part_8] of this tutorial we&#39;ll put it all together, quite literally, and combine our Clojure and ClojureScript libraries into a single jar.</p>
+<p>So now we&#39;ve seen how to use platform files to isolate platform-specific code and we&#39;ve also seen a little hack that can help when macros must be defined a platform-specific manner.  In <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/macro_dependenc://github.com/AndrewZures/combining_clj_cljs_libraries/tree/one_jar">Part 8</a> of this tutorial we&#39;ll put it all together, quite literally, and combine our Clojure and ClojureScript libraries into a single jar.</p>
 
 </div>
 

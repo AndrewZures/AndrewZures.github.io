@@ -7,20 +7,25 @@ categories: jekyll update
 
 [8thLight]: https://8thlight.com
 [speclj]:    https://github.com/slagyr/speclj 
+[part_6]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt6-platform-and-macros.html
 
 #Using Platform Files to Isolate Library Differences
 
 Now that we can write a single file that ultimate becomes separate `.clj` and `.cljs` files, we can look at how we're going to deal with the differences in the Clojure and ClojureScript platforms.
 
-We will isolate these differences in two files (one `clj` and one `cljs`) with the same file name and same namespace name. We will then reference this common namespace in our code.  When our clojure code runs, the `.clj` namespace will execute, when we run our ClojureScript code, our `.cljs` namespace will execute.  Thus the rest of our files can be written without a need to focus on platform details.
+We will isolate these differences in two files (one `.clj` and one `.cljs`) with the same file name and same namespace name. We will then reference this common namespace in our code.  When our clojure code runs, the `.clj` namespace will execute, and when we run our ClojureScript code, our `.cljs` namespace will execute.  Thus the rest of our files can be written without a need to focus on platform details.
 
 An example will illustrate the project design:
 
+#Platform Files: An Example
+
 Let's say we want to use our platform's `abs` function to find the absolute value of a number.  In Clojure this is done using the `org.clojure/math.numeric-tower` library, while ClojureScript would use JavaScript's `Math/abs` function.
 
-Lets add an "absolute difference" functionality to `shared_file.cljx`.  This function will simply find the absolute difference between two numbers.
+To set up this example, we'll make a `.cljx` function that uses `abs`
 
-First, let's make a test.  Add the code below to the `describe` block in your `shared_file_spec.cljx`:
+Lets add an "absolute difference" functionality to `shared_file.cljx`.  This functionality will simply find the absolute difference between two numbers.
+
+As always, we'll start with a test.  Add the code below to the `describe` block in your `shared_file_spec.cljx`:
 
 {% highlight clojure linenos %}
 
@@ -77,9 +82,9 @@ Now let's move to the cljs side.  In `platform.cljs` add:
      (js/Math.abs num))
 {% endhighlight %}
 
-Now we have two like-named functions in two like-named namespaces.  If we run our tests, they'll pass.  When Clojure runs, the `platform.clj` file will be used and the `numeric-tower` library will be executed.  When ClojureScript runs, the `platform.cljs` file will be used and JavaScript's `abs` function will be executed.  Our `shared-file` doesn't need to know about those details.  It can simply call the platform namespace's function and receive the results.
+Now we have two like-named functions in two like-named namespaces.  If we run our tests, they'll pass.  This works because when Clojure runs, the `platform.clj` file will be used and the `numeric-tower` library will be executed.  When ClojureScript runs, the `platform.cljs` file will be used and JavaScript's `abs` function will be executed.  Our `shared-file` doesn't need to know about those details.  It can simply call the platform namespace's function and receive the results.
 
 #Where We're At
-We now have a function, `abs-diff` that is written once yet can be used for both Clojure and ClojureScript.  This means that not only can we write a single code base that can run in Clojure and ClojureScript, it also means that the differences between the two platforms is isolated to the `platform` namespace.
+We now have a function, `abs-diff` that is written just once yet can be used for both Clojure and ClojureScript.  This means that not only can we write a single code base that can run in Clojure and ClojureScript, it also means that the differences between the two platforms is isolated to the `platform` namespace.
 
-In [Part 6][part_6] we'll utilized this same technique but will Clojure macros.
+In [Part 6][part_6] we'll utilized this same technique but with Clojure macros.

@@ -8,9 +8,11 @@ categories: jekyll update
 [8thLight]: https://8thlight.com
 [speclj]:    https://github.com/slagyr/speclj 
 [cljx]: https://github.com/lynaghk/cljx
+[sample_project]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/cljx
+
+Here is our continuing [Sample Project][sample_project] with working code up to this part (Part 4) of the tutorial.
 
 #Working With CLJX:
-
 
 Next, we'll use the [CLJX][cljx] library.  CLJX translates a `.cljx` files into separate `.cljs` and `.clj` files.  You can use small `#+cljs` an `#+clj` tags to differentiate which forms you would like included in which version.  In the 8th Light [Speclj][speclj] project, CLJX replaced our hand-rolled pre-compiler.  this gave us the benefit of relying on an open-source, updated dependency instead of our own program.  
 
@@ -20,7 +22,7 @@ So CLJX comes with a cost, but it does allow you to keep a relatively similar co
 
 #Adding CLJX to your Project.clj
 
-To add `cljx` simply add `[com.keminglabs/cljx "0.3.1"]` to you general `:dependencies` map. You will then have to add configure src and output paths to the `:cljx` key:
+To add [CLJX][cljx] simply add `[com.keminglabs/cljx "0.3.1"]` to you general `:dependencies` map. You will then have to add configure src and output paths to the `:cljx` key:
 
 {% highlight clojure linenos %}
     :cljx {:builds [{:source-paths ["src/cljx"]
@@ -72,6 +74,7 @@ For your `:cljs` you new source and test resources will both go in `:source-path
           :notify-command run-specs}
 {% endhighlight %}
 
+#Making Things Easy with Aliases
 
 We're almost done.  With cljx `hooks` in your `project.clj`, cljx will auto-generate files before you run you Clojure tests.  However, for ClojureScript we'll have to test leiningen to compile before we run tests.  We can do this easily by changing our `cljs-test` alias:
 
@@ -99,10 +102,10 @@ Now our `project.clj` file is updated. We should now be able to add a `.cljx` fi
 
 #Adding a .cljx File to your Project
 
-If you are using the [sample project][sample_project] you'll see that the we already have `src/clj/myproject/core.clj` and `src/cljs/myproject/core.cljs`.  We'll create a similar structure for your `.cljx` files.  
+If you are using the [sample project][sample_project] you'll see that the we already have `src/clj/myproject/core.clj` and `src/cljs/myproject/core.cljs`.  We'll create a similar directory structure for the `.cljx` files.  
 
 
-Let's make `src/cljx/myproject/` folder and add `shared_file.cljx` to the new folder.  Next, let's make `spec/cljx/myproject/` folder and add `shared_file_spec.cljx`.
+Let's make a `src/cljx/myproject/` folder and add `shared_file.cljx` to the new folder.  Next, let's make a `spec/cljx/myproject/` folder and add `shared_file_spec.cljx`.
 
 In `shared_file.cljx` add:
 
@@ -147,6 +150,40 @@ Now that we have cljx set up and a `.cljx` file and test file, we can run `lein 
 #Where We Are
 
 Now we have a single `.cljx` source and spec file that will be generated into separate `.clj` and `.cljs` files.  And we can our code in both Clojure and ClojureScript.  In [Part 5][part_5] we will finall get to writing some code that will help us build one functional source for Clojure and Clojurescript.
+
+----
+
+For reference, here is (very) basic look at our project structure
+
+{% highlight clojure %}
+myproject
+   |
+   |--- test
+   |     |--- clj
+   |     |    |--- myproject
+   |     |            |--- test-code.clj
+   |     |--- cljs
+   |     |     |--- myproject
+   |     |             |--- test-code.cljs
+   |     |--- cljx
+   |           |--- myproject
+   |                   |--- test-code.cljx
+   |
+   |--- src
+         |--- clj
+         |     |--- myproject
+         |             |--- source-code.clj
+         |--- cljs
+         |     |--- myproject
+         |             |--- source-code.cljs
+         |--- cljx
+               |--- myproject
+                       |--- source-code.cljx
+
+
+
+
+{% endhighlight %}
 
 
 -----
