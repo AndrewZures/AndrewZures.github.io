@@ -8,7 +8,7 @@ categories: jekyll update
 [8thLight]: https://8thlight.com
 [speclj]:    https://github.com/slagyr/speclj 
 [sample_project]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/base_project
-[part_3]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt2-setup.html
+[part_3]: http://localhost:4000/jekyll/update/2014/02/08/clj-cljs-pt3-dividing-profiles.html
 
 #Seting Up You Base Project:
 
@@ -30,11 +30,11 @@ myproject
    |           |--- myproject
    |                   |--- test-code.cljs
    |--- src
-   |     |--- clj
-   |     |     |--- myproject
-   |     |             |--- source-code.clj
-   |     |--- cljs
-   |          |--- myproject
+         |--- clj
+         |     |--- myproject
+         |             |--- source-code.clj
+         |--- cljs
+              |--- myproject
                        |--- source-code.cljs
 {% endhighlight %}
 

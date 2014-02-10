@@ -9,7 +9,7 @@ categories: jekyll update
 [speclj]:    https://github.com/slagyr/speclj 
 [sample_project]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/throwable
 [clojure_documentation]: http://clojuredocs.org/clojure_core/1.2.0/clojure.core/try
-[part_8]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/macro_dependenc://github.com/AndrewZures/combining_clj_cljs_libraries/tree/one_jar 
+[part_8]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/macro_dependenc://github.com/AndrewZures/combining_clj_cljs_libraries/tree/one_jar  
 
 Here is [Sample Project][sample_project] with working code and tests through this part (Part 7) of the tutorial.
 

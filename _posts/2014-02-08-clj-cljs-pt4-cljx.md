@@ -9,6 +9,7 @@ categories: jekyll update
 [speclj]:    https://github.com/slagyr/speclj 
 [cljx]: https://github.com/lynaghk/cljx
 [sample_project]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/cljx
+[part_5]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt5-platform.html
 
 Here is our continuing [Sample Project][sample_project] with working code up to this part (Part 4) of the tutorial.
 
