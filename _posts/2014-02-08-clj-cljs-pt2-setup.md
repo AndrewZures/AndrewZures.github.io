@@ -7,53 +7,36 @@ categories: jekyll update
 
 [8thLight]: https://8thlight.com
 [speclj]:    https://github.com/slagyr/speclj 
-
-#Combining Clojure and ClojureScript Libraries: A Creative How-To
+[sample_project]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/base_project
+[part_3]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt2-setup.html
 
 #Seting Up You Base Project:
 
-  The Clojure and ClojureScript versions of your project, although residing within the same jar, will have different classpaths.  It is important that you isolate these classpaths in a way that will allow you to test and run the two portions of your library independently.  This can be done by adding separate profiles to your project.clj file.  Let’s make a clj and cljs profile.  
+A [Sample Base Project][sample_project] is available if you would like to use it.  It already has [Speclj][speclj] installed and running for both Clojure and ClojureScript.  We will be referencing this project throught this tutorial.  
 
-{% highlight clojure linenos %}
-(defproject myproject "0.1.0-SNAPSHOT"
-  :description "Combining Clojure and ClojureScript Libraries"
+Regardless of whether you use the sample project, you project structure should look similar.  This is especially true in how your `src/` and `spec/` paths should looks.  You'll want a structure like `src/file-type/project-name/code.file-type`.  For example, in the sample project we have `src/clj/myproject/core.clj` for Clojure source and `src/cljs/myproject/core.cljs` for the ClojureScript source. 
 
-    :dependencies [[org.clojure/clojure "1.5.1"]
-                     [speclj "2.9.4"]]
-
-    :plugins [[speclj "6.9.4"]]
-
-    :aliases {  "clj-test" ["with-profile","clj","spec"]
-                "clj-test-auto"  ["with-profile","clj","spec", "-a"]
-                "cljs-test" ["with-profile","cljs", "cljsbuild", "test"]
-                "cljs-test-auto" ["with-profile","cljs", "cljsbuild", "auto"]
-            }
+A similar structure should be used for your tests.
 
 
-    :profiles {
-         :dev { }
-
-         :clj {
-             :source-paths ["src/clj"]
-             :test-paths ["spec/clj"]
-         }
-
-         :cljs {:dependencies [[org.clojure/clojurescript "0.0-2014"] ;necessary for current version of speclj
-                               [org.clojure/tools.reader "0.7.10"] ;necessary for current version of speclj
-                               [lein-cljsbuild "1.0.2"]]
-               :plugins [[lein-cljsbuild "1.0.2"]]
-
-               :cljsbuild ~(let [run-specs ["bin/speclj" "target/tests.js"]]
-                   {:builds
-                       {:dev {:source-paths ["src/cljs"  "spec/cljs"]
-                              :compiler {:output-to "target/tests.js"
-                                         :pretty-print true}
-                              :notify-command run-specs}}
-               :test-commands {"test" run-specs}})
-
-              }
-        }
-)
+{% highlight clojure %}
+myproject
+   |
+   |--- test
+   |     |--- clj
+   |     |    |--- myproject
+   |     |            |--- test-code.clj
+   |     |--- cljs
+   |           |--- myproject
+   |                   |--- test-code.cljs
+   |--- src
+   |     |--- clj
+   |     |     |--- myproject
+   |     |             |--- source-code.clj
+   |     |--- cljs
+   |          |--- myproject
+                       |--- source-code.cljs
 {% endhighlight %}
 
-Now we can manipulate the two classpaths independently of each other.  However, you should still be wary of the fact that the two paths will have to get along somewhat when we put everything together.  This is especially the case for .clj files in your :cljs profile.  With separate profiles you can two different .clj files with the exact same name - one in the clj profile path and the other in the cljs profile path.  Only a single file-name.clj can exist when we combine the paths.
+#Where We Are
+We now have a base project template that can be used to get a sense of the structure of our project, but that's about it.  In [Part 3][part_3] of this tutorial we'll use profiles separate our Clojure and ClojureScript classpaths.

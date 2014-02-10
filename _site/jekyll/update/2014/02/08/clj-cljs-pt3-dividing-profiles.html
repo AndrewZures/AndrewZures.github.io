@@ -25,11 +25,11 @@
 <p class="meta">08 Feb 2014</p>
 
 <div class="post">
+<p>Here is a link to our <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/base_project">sample project</a> that shows the end result of this part (Part 3) of Tutorial</p>
+
 <h1>Dividing Your ClassPaths with Profiles:</h1>
 
-<p>Here is a link to our <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/base_project">sample project</a> that shows the end result of this Part of Tutorial</p>
-
-<p>The Clojure and ClojureScript versions of your project, although residing within the same jar, will have different classpaths.  It is important that you isolate these classpaths in a way that will allow you to test and run the two portions of your library independently.  This can be done by adding separate profiles to your project.clj file.  Let’s make clj and cljs profiles.</p>
+<p>The Clojure and ClojureScript versions of your project, although residing within the same jar, will have different classpaths.  It is important that you isolate these classpaths in a way that will allow you to test and run the two portions of your library independently.  This can be done by adding separate profiles to your <code>project.clj</code> file.  Let’s make <code>:clj</code> and <code>:cljs</code> profiles.</p>
 
 <p>Both profiles will use the <code>org.clojure/clojure</code> and <code>speclj</code> dependency so they should remain outside the <code>:profile</code> map.  That means that all we need for the <code>:clj</code> profile is:</p>
 
@@ -39,7 +39,7 @@
 <span class="lineno">4</span>          <span class="p">}</span>
 </code></pre></div>
 
-<p>For the <code>:cljs</code> profile, we&#39;ll need the standard <code>:cljsbuild</code> information.  Additionally, the sample base project uses <code>speclj</code> for testing so we&#39;ll see some of the syntax necessary for speclj as well.</p>
+<p>For the <code>:cljs</code> profile, we&#39;ll need the standard <code>:cljsbuild</code> information.  Additionally, the sample base project uses <code>speclj</code> for testing so we&#39;ll see some syntax necessary for speclj as well.</p>
 
 <div class="highlight"><pre><code class="clojure"><span class="lineno"> 1</span>          <span class="ss">:cljs</span> <span class="p">{</span><span class="ss">:dependencies</span> <span class="p">[[</span><span class="nv">org.clojure/clojurescript</span> <span class="s">&quot;0.0-2014&quot;</span><span class="p">]</span> <span class="c1">;necessary for current version of speclj</span>
 <span class="lineno"> 2</span>                                <span class="p">[</span><span class="nv">org.clojure/tools.reader</span> <span class="s">&quot;0.7.10&quot;</span><span class="p">]</span> <span class="c1">;necessary for current version of speclj</span>
@@ -57,7 +57,7 @@
 <span class="lineno">14</span>           <span class="p">}</span>
 </code></pre></div>
 
-<p>Now let make our lives easier by adding testing aliases to our project.  Here is the alias to run your Clojure <code>speclj</code> tests using the <code>clj</code> profile:</p>
+<p>Now let make our lives easier by adding testing aliases to our project.  Here is the alias to run your Clojure <code>speclj</code> tests using the <code>:clj</code> profile:</p>
 
 <div class="highlight"><pre><code class="clojure"><span class="lineno">1</span>     <span class="ss">:aliases</span> <span class="p">{</span>  <span class="s">&quot;clj-test&quot;</span> <span class="p">[</span><span class="s">&quot;with-profile&quot;</span>,<span class="s">&quot;clj&quot;</span>,<span class="s">&quot;spec&quot;</span><span class="p">]</span>
 <span class="lineno">2</span>              <span class="p">}</span>
@@ -70,10 +70,13 @@
 <span class="lineno">3</span>              <span class="p">}</span>
 </code></pre></div>
 
-<p>Now, if you have <code>Speclj</code> configured correctly, you can run <code>lein clj-test</code> and <code>lein cljs-test</code> from the command line to run your tests.</p>
+<p>Now, if you have <code>Speclj</code> configured correctly, you can run <code>lein clj-test</code> and <code>lein cljs-test</code> from the command line to run your Clojure and ClojureScript tests respectively.</p>
 
-<p>With our profiles in place, we can move ot <a href="https://github.com/slagyr/speclj">Part 4</a>, where we addded the <code>cljx</code> dependency.
-And again, here is a link to our <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/base_project">sample project</a> that shows a working sample project reflecting part of the tutorial.</p>
+<p>With our profiles in place, we can move ot <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/base_project">Part 4</a>, where we will add the <a href="https://github.com/lynaghk/cljx">CLJX</a> dependency.</p>
+
+<p>And again, here is a link to our <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/base_project">sample project</a> that shows a working sample project up to and through this part of the tutorial.</p>
+
+<hr>
 
 <p>Here&#39;s a look at the entire <code>project.clj</code> file after our Part 3 changes.</p>
 

@@ -7,16 +7,16 @@ categories: jekyll update
 
 [8thLight]: https://8thlight.com
 [speclj]:    https://github.com/slagyr/speclj 
-[cljx]: https://8thlight.com
+[cljx]: https://github.com/lynaghk/cljx
 
 #Working With CLJX:
 
 
-Next, we'll use the [CLJX library][cljx].  CLJX translates a `.cljx` files into separate `.cljs` and `.clj` files.  You can use small `#+cljs` an `#+clj` tags to differentiate which forms you would like included in which version.  In the 8th Light Speclj project, CLJX replaced our hand-rolled pre-compiler.  this gave us the benefit of relying on an open-source, updated dependency instead of our own program.  
+Next, we'll use the [CLJX][cljx] library.  CLJX translates a `.cljx` files into separate `.cljs` and `.clj` files.  You can use small `#+cljs` an `#+clj` tags to differentiate which forms you would like included in which version.  In the 8th Light [Speclj][speclj] project, CLJX replaced our hand-rolled pre-compiler.  this gave us the benefit of relying on an open-source, updated dependency instead of our own program.  
 
-However, CLJX does not come without a few downsides.  First, you'll have to keep track of the status of your cljx results. If you make a change in a `.cljx` file and, for whatever reason, do not recompile the cljx folder, your changes will not appear in your clj and cljs files.  Second, You should be careful to not make changes to the generated `.clj` and `.cljs` files since they will be overridden the next time you generate your `cljx` output.  Third, if you're running a test autorunner, it will likely not pick up changes to .cljx files.
+However, CLJX comes with a few downsides.  First, you'll have to keep track of the status of your cljx results. If you make a change in a `.cljx` file and, for whatever reason, do not recompile the cljx folder, your changes will not appear in your `.clj` and `.cljs` files.  Second, You should be careful to not make changes to the generated `.clj` and `.cljs` files since they will be overridden the next time you generate your `cljx` output.  Third, if you're running a test autorunner, it will likely not pick up changes to .cljx files.
 
-So CLJX comes with a cost, but it does allow you to keep a relatively similar code base for your `clj` and `cljs` libraries.  
+So CLJX comes with a cost, but it does allow you to keep a relatively similar code base for your Clojure and ClojureScript libraries.  
 
 #Adding CLJX to your Project.clj
 

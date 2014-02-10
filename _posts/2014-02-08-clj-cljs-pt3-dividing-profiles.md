@@ -7,13 +7,14 @@ categories: jekyll update
 
 [speclj]:    https://github.com/slagyr/speclj 
 [sample_project]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/base_project
-[part_4]: https://github.com/slagyr/speclj
+[part_4]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/base_project
+[cljx]: https://github.com/lynaghk/cljx
+
+Here is a link to our [sample project][sample_project] that shows the end result of this part (Part 3) of Tutorial
 
 #Dividing Your ClassPaths with Profiles:
 
-Here is a link to our [sample project][sample_project] that shows the end result of this Part of Tutorial
-
-The Clojure and ClojureScript versions of your project, although residing within the same jar, will have different classpaths.  It is important that you isolate these classpaths in a way that will allow you to test and run the two portions of your library independently.  This can be done by adding separate profiles to your project.clj file.  Let’s make clj and cljs profiles.
+The Clojure and ClojureScript versions of your project, although residing within the same jar, will have different classpaths.  It is important that you isolate these classpaths in a way that will allow you to test and run the two portions of your library independently.  This can be done by adding separate profiles to your `project.clj` file.  Let’s make `:clj` and `:cljs` profiles.
 
 Both profiles will use the `org.clojure/clojure` and `speclj` dependency so they should remain outside the `:profile` map.  That means that all we need for the `:clj` profile is:
 
@@ -24,7 +25,7 @@ Both profiles will use the `org.clojure/clojure` and `speclj` dependency so they
          }
 {% endhighlight %}
 
-For the `:cljs` profile, we'll need the standard `:cljsbuild` information.  Additionally, the sample base project uses `speclj` for testing so we'll see some of the syntax necessary for speclj as well.
+For the `:cljs` profile, we'll need the standard `:cljsbuild` information.  Additionally, the sample base project uses `speclj` for testing so we'll see some syntax necessary for speclj as well.
 
 {% highlight clojure linenos %}
          :cljs {:dependencies [[org.clojure/clojurescript "0.0-2014"] ;necessary for current version of speclj
@@ -43,7 +44,7 @@ For the `:cljs` profile, we'll need the standard `:cljsbuild` information.  Addi
           }
 {% endhighlight %}
 
-Now let make our lives easier by adding testing aliases to our project.  Here is the alias to run your Clojure `speclj` tests using the `clj` profile:
+Now let make our lives easier by adding testing aliases to our project.  Here is the alias to run your Clojure `speclj` tests using the `:clj` profile:
 
 {% highlight clojure linenos %}
     :aliases {  "clj-test" ["with-profile","clj","spec"]
@@ -58,10 +59,14 @@ The ClojureScript testing alias looks very similar:
              }
 {% endhighlight %}
 
-Now, if you have `Speclj` configured correctly, you can run `lein clj-test` and `lein cljs-test` from the command line to run your tests.
+Now, if you have `Speclj` configured correctly, you can run `lein clj-test` and `lein cljs-test` from the command line to run your Clojure and ClojureScript tests respectively.
 
-With our profiles in place, we can move ot [Part 4][part_4], where we addded the `cljx` dependency.
-And again, here is a link to our [sample project][sample_project] that shows a working sample project reflecting part of the tutorial.
+With our profiles in place, we can move ot [Part 4][part_4], where we will add the [CLJX][cljx] dependency.
+
+And again, here is a link to our [sample project][sample_project] that shows a working sample project up to and through this part of the tutorial.
+
+
+----
 
 Here's a look at the entire `project.clj` file after our Part 3 changes.
 

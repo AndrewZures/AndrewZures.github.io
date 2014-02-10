@@ -27,11 +27,11 @@
 <div class="post">
 <h1>Working With CLJX:</h1>
 
-<p>Next, we&#39;ll use the <a href="https://8thlight.com">CLJX library</a>.  CLJX translates a <code>.cljx</code> files into separate <code>.cljs</code> and <code>.clj</code> files.  You can use small <code>#+cljs</code> an <code>#+clj</code> tags to differentiate which forms you would like included in which version.  In the 8th Light Speclj project, CLJX replaced our hand-rolled pre-compiler.  this gave us the benefit of relying on an open-source, updated dependency instead of our own program.  </p>
+<p>Next, we&#39;ll use the <a href="https://github.com/lynaghk/cljx">CLJX</a> library.  CLJX translates a <code>.cljx</code> files into separate <code>.cljs</code> and <code>.clj</code> files.  You can use small <code>#+cljs</code> an <code>#+clj</code> tags to differentiate which forms you would like included in which version.  In the 8th Light <a href="https://github.com/slagyr/speclj">Speclj</a> project, CLJX replaced our hand-rolled pre-compiler.  this gave us the benefit of relying on an open-source, updated dependency instead of our own program.  </p>
 
-<p>However, CLJX does not come without a few downsides.  First, you&#39;ll have to keep track of the status of your cljx results. If you make a change in a <code>.cljx</code> file and, for whatever reason, do not recompile the cljx folder, your changes will not appear in your clj and cljs files.  Second, You should be careful to not make changes to the generated <code>.clj</code> and <code>.cljs</code> files since they will be overridden the next time you generate your <code>cljx</code> output.  Third, if you&#39;re running a test autorunner, it will likely not pick up changes to .cljx files.</p>
+<p>However, CLJX comes with a few downsides.  First, you&#39;ll have to keep track of the status of your cljx results. If you make a change in a <code>.cljx</code> file and, for whatever reason, do not recompile the cljx folder, your changes will not appear in your <code>.clj</code> and <code>.cljs</code> files.  Second, You should be careful to not make changes to the generated <code>.clj</code> and <code>.cljs</code> files since they will be overridden the next time you generate your <code>cljx</code> output.  Third, if you&#39;re running a test autorunner, it will likely not pick up changes to .cljx files.</p>
 
-<p>So CLJX comes with a cost, but it does allow you to keep a relatively similar code base for your <code>clj</code> and <code>cljs</code> libraries.  </p>
+<p>So CLJX comes with a cost, but it does allow you to keep a relatively similar code base for your Clojure and ClojureScript libraries.  </p>
 
 <h1>Adding CLJX to your Project.clj</h1>
 
