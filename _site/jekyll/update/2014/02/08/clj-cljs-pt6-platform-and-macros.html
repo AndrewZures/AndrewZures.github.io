@@ -25,116 +25,54 @@
 <p class="meta">08 Feb 2014</p>
 
 <div class="post">
-<h4>Introduction: ClojureScript and the Case of Two Painfully Similar Libraries</h4>
+<h1>Using Platform Files with Macros</h1>
 
-<p>ClojureScript is an incredible new project that any Clojurian can appreciate.  What could be better than replacing headache-inducing JavaScript with the clean, flowing syntax of Clojure?  But ClojureScript is very new, and in some cases it&#39;s lack of polish can be frustrating.  One of the of most frustrating aspects of ClojureScript currently, is that it fails to fails to be a complete abstraction of JavaScript in Clojure.  this comes from the fact that ClojureScript&#39;s syntax and abilities do not align perfectly with their Clojure counterparts.  For example, the binding function is not currently implemented in ClojureScript.  That may seem trivial but if you&#39;re hoping to transfer a piece of Clojure code to ClojureScript, and that code has a binding call, you&#39;re going to have to learn additional aspects of ClojureScript and make a new version of you existing Clojure code to make that piece of code work.  </p>
+<p>In [Part 5][part_5] we used separate <code>.clj</code> and <code>.cljs</code> files with the same namespace name to isolate the platform differences between Clojure and ClojureScript.  But what if we want to use these files in macros?  You can still use these files in macros but there are a few tweaks needed to our previous platform strategy.</p>
 
-<p>ClojureScript is an incredible new project that any Clojurian can appreciate.  What could be better than replacing the often clunky syntax of JavaScript with the clean, flowing syntax of Clojure?  But ClojureScript is very new, and in some cases it&#39;s lack of polish can prove to be frustrating.  One of the of most frustrating aspects of ClojureScript currently, is that it fails to be a complete abstraction of JavaScript in Clojure.  This comes from the fact that ClojureScript&#39;s capabilities do not align perfectly with their Clojure counterparts.  For example, Clojure’s binding function is not currently implemented in ClojureScript.  This may seem trivial but if you&#39;re hoping to transfer a piece of Clojure code to ClojureScript with a binding function call, you now must learn additional aspects of ClojureScript to get that piece of code to work.  You now must also maintain the new ClojureScript version of your code along with your pre-existing Clojure version.  These small differences can add up and before you know it you’re could be maintaining two separate Libraries.  The kicker is of course that these libraries have about 95% code that is common but the 5% of difference simply cannot be resolved.</p>
+<p>The issue with macros is that there will be no equivalent <code>.cljs</code> macro file.  Most macros will stay on the Clojure side of your project. Let&#39;s take a look at an example.</p>
 
-<p>We encountered this problem here at <a href="https://8thlight.com">8th Light</a> while attempting to extend our Clojure testing framework <a href="https://github.com/slagyr/speclj">Speclj</a> to ClojureScript.  There were numerous ClojureScript incompatibilities sprinkled throughout the existing Clojure library.  In our original solution, we built a pre-compiler that could be run against the Clojure code which would switch out all of the incompatibilities with their ClojureScript equivalents.  This solution got us pretty far but it came with a few major drawbacks.  First, the pre-compiler was a one-off design, built specifically for the Speclj project.  There was little chance that it would be maintained, which introduced an added layer of fragility to our project.  More importantly, the ClojureScript version still was its own library.  This led to the oft confusing distinction betweent Speclj (Clojure) and Specljs “with an ‘s’ at the end” (ClojureScript).  Both libraries had to be added independently to a project.   </p>
+<p>Let&#39;s add a new test to our <code>shared_file.cljx</code> file which will test a simple macro.</p>
 
-<p>Recently, we took another look at our two massively similar libraries and asked if, with the changes to the Clojure/ClojureScript landscape, we could do better.   Not to spoil the fun, but we were able to combine our two libraries into one.  Unfortunately it did take a few absolutely-necessary hacks but that is the cost of working with such a exciting, constantly changing technology like ClojureScript.  We definitely look forward to the day when ClojureScript becomes an effortless abstraction of JavaScript but until then a little creativity will have to suffice.</p>
+<p>Create a <code>macro.clj</code> file in your <code>src/clj/myproject/</code> folder. You can leave it empty for now.</p>
 
-<h1>Combining Clojure and ClojureScript Libraries: A Creative How-To</h1>
+<p>Next, add the dependency to your <code>shared_file_spec.cljx</code> under <code>:require-macros</code>. Your namespace should now look like this:</p>
 
-<h1>Dividing Your ClassPaths with Profiles:</h1>
-
-<p>The Clojure and ClojureScript versions of your project, although residing within the same jar, will have different classpaths.  It is important that you isolate these classpaths in a way that will allow you to test and run the two portions of your library independently.  This can be done by adding separate profiles to your project.clj file.  Let’s make a clj and cljs profile.  </p>
-
-<div class="highlight"><pre><code class="clojure"><span class="lineno"> 1</span> <span class="p">(</span><span class="kd">defproject </span><span class="nv">myproject</span> <span class="s">&quot;0.1.0-SNAPSHOT&quot;</span>
-<span class="lineno"> 2</span>   <span class="ss">:description</span> <span class="s">&quot;Combining Clojure and ClojureScript Libraries&quot;</span>
-<span class="lineno"> 3</span> 
-<span class="lineno"> 4</span>     <span class="ss">:dependencies</span> <span class="p">[[</span><span class="nv">org.clojure/clojure</span> <span class="s">&quot;1.5.1&quot;</span><span class="p">]</span>
-<span class="lineno"> 5</span>                      <span class="p">[</span><span class="nv">speclj</span> <span class="s">&quot;2.9.4&quot;</span><span class="p">]]</span>
-<span class="lineno"> 6</span> 
-<span class="lineno"> 7</span>     <span class="ss">:plugins</span> <span class="p">[[</span><span class="nv">speclj</span> <span class="s">&quot;6.9.4&quot;</span><span class="p">]]</span>
-<span class="lineno"> 8</span> 
-<span class="lineno"> 9</span>     <span class="ss">:aliases</span> <span class="p">{</span>  <span class="s">&quot;clj-test&quot;</span> <span class="p">[</span><span class="s">&quot;with-profile&quot;</span>,<span class="s">&quot;clj&quot;</span>,<span class="s">&quot;spec&quot;</span><span class="p">]</span>
-<span class="lineno">10</span>                 <span class="s">&quot;clj-test-auto&quot;</span>  <span class="p">[</span><span class="s">&quot;with-profile&quot;</span>,<span class="s">&quot;clj&quot;</span>,<span class="s">&quot;spec&quot;</span>, <span class="s">&quot;-a&quot;</span><span class="p">]</span>
-<span class="lineno">11</span>                 <span class="s">&quot;cljs-test&quot;</span> <span class="p">[</span><span class="s">&quot;with-profile&quot;</span>,<span class="s">&quot;cljs&quot;</span>, <span class="s">&quot;cljsbuild&quot;</span>, <span class="s">&quot;test&quot;</span><span class="p">]</span>
-<span class="lineno">12</span>                 <span class="s">&quot;cljs-test-auto&quot;</span> <span class="p">[</span><span class="s">&quot;with-profile&quot;</span>,<span class="s">&quot;cljs&quot;</span>, <span class="s">&quot;cljsbuild&quot;</span>, <span class="s">&quot;auto&quot;</span><span class="p">]</span>
-<span class="lineno">13</span>             <span class="p">}</span>
-<span class="lineno">14</span> 
-<span class="lineno">15</span> 
-<span class="lineno">16</span>     <span class="ss">:profiles</span> <span class="p">{</span>
-<span class="lineno">17</span>          <span class="ss">:dev</span> <span class="p">{</span> <span class="p">}</span>
-<span class="lineno">18</span> 
-<span class="lineno">19</span>          <span class="ss">:clj</span> <span class="p">{</span>
-<span class="lineno">20</span>              <span class="ss">:source-paths</span> <span class="p">[</span><span class="s">&quot;src/clj&quot;</span><span class="p">]</span>
-<span class="lineno">21</span>              <span class="ss">:test-paths</span> <span class="p">[</span><span class="s">&quot;spec/clj&quot;</span><span class="p">]</span>
-<span class="lineno">22</span>          <span class="p">}</span>
-<span class="lineno">23</span> 
-<span class="lineno">24</span>          <span class="ss">:cljs</span> <span class="p">{</span><span class="ss">:dependencies</span> <span class="p">[[</span><span class="nv">org.clojure/clojurescript</span> <span class="s">&quot;0.0-2014&quot;</span><span class="p">]</span> <span class="c1">;necessary for current version of speclj</span>
-<span class="lineno">25</span>                                <span class="p">[</span><span class="nv">org.clojure/tools.reader</span> <span class="s">&quot;0.7.10&quot;</span><span class="p">]</span> <span class="c1">;necessary for current version of speclj</span>
-<span class="lineno">26</span>                                <span class="p">[</span><span class="nv">lein-cljsbuild</span> <span class="s">&quot;1.0.2&quot;</span><span class="p">]]</span>
-<span class="lineno">27</span>                <span class="ss">:plugins</span> <span class="p">[[</span><span class="nv">lein-cljsbuild</span> <span class="s">&quot;1.0.2&quot;</span><span class="p">]]</span>
-<span class="lineno">28</span> 
-<span class="lineno">29</span>                <span class="ss">:cljsbuild</span> <span class="o">~</span><span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">run-specs</span> <span class="p">[</span><span class="s">&quot;bin/speclj&quot;</span> <span class="s">&quot;target/tests.js&quot;</span><span class="p">]]</span>
-<span class="lineno">30</span>                    <span class="p">{</span><span class="ss">:builds</span>
-<span class="lineno">31</span>                        <span class="p">{</span><span class="ss">:dev</span> <span class="p">{</span><span class="ss">:source-paths</span> <span class="p">[</span><span class="s">&quot;src/cljs&quot;</span>  <span class="s">&quot;spec/cljs&quot;</span><span class="p">]</span>
-<span class="lineno">32</span>                               <span class="ss">:compiler</span> <span class="p">{</span><span class="ss">:output-to</span> <span class="s">&quot;target/tests.js&quot;</span>
-<span class="lineno">33</span>                                          <span class="ss">:pretty-print</span> <span class="nv">true</span><span class="p">}</span>
-<span class="lineno">34</span>                               <span class="ss">:notify-command</span> <span class="nv">run-specs</span><span class="p">}}</span>
-<span class="lineno">35</span>                <span class="ss">:test-commands</span> <span class="p">{</span><span class="s">&quot;test&quot;</span> <span class="nv">run-specs</span><span class="p">}})</span>
-<span class="lineno">36</span> 
-<span class="lineno">37</span>               <span class="p">}</span>
-<span class="lineno">38</span>         <span class="p">}</span>
-<span class="lineno">39</span> <span class="p">)</span>
+<div class="highlight"><pre><code class="clojure"><span class="lineno">1</span> <span class="p">(</span><span class="kd">ns </span><span class="nv">myproject.shared-file-spec</span>
+<span class="lineno">2</span>     <span class="p">(</span><span class="o">#</span><span class="nv">+clj</span> <span class="ss">:require</span> <span class="o">#</span><span class="nv">+cljs</span> <span class="ss">:require-macros</span>
+<span class="lineno">3</span>           <span class="p">[</span><span class="nv">speclj.core</span> <span class="ss">:refer</span> <span class="p">[</span><span class="nv">describe</span> <span class="nv">it</span> <span class="nv">should=</span><span class="p">]]</span>
+<span class="lineno">4</span>           <span class="p">[</span><span class="nv">myproject.macros</span> <span class="ss">:as</span> <span class="nv">macros</span><span class="p">])</span>
+<span class="lineno">5</span>     <span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">speclj.core</span><span class="p">]</span>
+<span class="lineno">6</span>       <span class="p">[</span><span class="nv">myproject.shared-file</span> <span class="ss">:as</span> <span class="nv">shared-file</span><span class="p">])</span>
+<span class="lineno">7</span> <span class="p">)</span>
 </code></pre></div>
 
-<p>Now we can manipulate the two classpaths independently of each other.  However, you should still be wary of the fact that the two paths will have to get along somewhat when we put everything together.  This is especially the case for .clj files in your :cljs profile.  With separate profiles you can two different .clj files with the exact same name - one in the clj profile path and the other in the cljs profile path.  Only a single file-name.clj can exist when we combine the paths.</p>
+<p>Now add a new test that will evaluate an <code>abs</code> function located in your macro file</p>
 
-<h1>Generating Code using CLJX:</h1>
+<div class="highlight"><pre><code class="clojure"><span class="lineno">1</span>   <span class="p">(</span><span class="nf">it</span> <span class="s">&quot;finds absolute value using macro&quot;</span>
+<span class="lineno">2</span>         <span class="p">(</span><span class="nf">should=</span> <span class="mi">2</span> <span class="p">(</span><span class="nf">macros/abs</span> <span class="mi">-2</span><span class="p">)))</span>
+</code></pre></div>
 
-<p>Next, we&#39;ll use the CLJX library.  CLJX translates a .cljx files into separate cljs and clj files.  You can use small #+cljs an #+clj tags to differentiate which forms you would like to be in which version.  In the 8th Light Speclj project, CLJX replaced our hand-rolled pre-compiler.  this gave us the benefit of relying on an open-source, updated dependency instead of our own little program.  </p>
+<p>So now we have a test but it won&#39;t pass since we have nothing in our <code>macro.clj</code> file</p>
 
-<p>lets configure it:</p>
+<p>Let&#39;s now add a namespace and simple <code>abs</code> function to our macro file.</p>
 
-<p>-project.clj changes
--note location of information</p>
+<div class="highlight"><pre><code class="clojure"><span class="lineno">1</span> <span class="p">(</span><span class="kd">ns </span><span class="nv">myproject.macros</span>
+<span class="lineno">2</span>   <span class="c1">;(:require [myproject.platform]) ;uncommenting will break cljs tests</span>
+<span class="lineno">3</span>     <span class="p">)</span>
+<span class="lineno">4</span> 
+<span class="lineno">5</span>     <span class="p">(</span><span class="kd">defmacro </span><span class="nv">abs</span> <span class="p">[</span><span class="nv">x</span><span class="p">]</span>
+<span class="lineno">6</span>       <span class="o">`</span><span class="p">(</span><span class="nf">myproject.platform/abs</span> <span class="o">~</span><span class="nv">x</span><span class="p">))</span>
+</code></pre></div>
 
-<p>However, CLJX can be a little tricky.  The hardest part may be just keeping everything straight.  All shared clj and cljs files must be renamed as .cljx files.  Normally, these files will be in your src file just like the other source files.  However, they will generate .clj and cljs files in a separate location, normal something like target/generated/.  So now some your “true” source code is in your src file while a good amount could be in your target/generated file.   This also means that your project.clj src and test maps will have to be updated with your target/generated equivalents.</p>
+<p>Now here is where things get interesting.  As you can see the <code>:require</code> statement is commented out and our macro function uses a fully qualified namespace.  It seems like our macro might not be able to find the platform namespace.  But let&#39;s run our tests.</p>
 
-<h1>Using Platform Files to Generate Polymorphic Action:</h1>
+<p>They should pass!</p>
 
-<p>For most Clojure/ClojureScript discrepancies, a platform dependency will do the trick.  Make two files with the same name - one a .clj and the other .cljs.  Add them to their respective src folders.  For any Clojure/ClojureScript discrepancy add matching functions to each file and implement the platform’s version of that functionality.  </p>
+<p>It seems like we should <code>:require</code> our platform namespace since the file uses it, but this will actually break the ClojureScript-side tests.  This is because the macro file will always attempt to evaluate the <code>.clj</code> version of your platform file if it is defined in the <code>:require</code> namespace.  By using a fully-qualified namespace in your macro instead of referencing it through a <code>:require</code> statement, the correct platform file will be evaluated at macro expansion.  So, in this case, you should not require the platform file but instead use its fully-qualified namespace where it is needed.</p>
 
-<p>For most cases you can simply :require the file, although it’s best if you use an alias since ClojureScript effectively requires aliases for its imports.  Clojure will obviously find the .clj version of your platform file and run based off of that.  ClojureScript will do the same for the .cljs file.  Here are a few examples:</p>
+<h1>Where We&#39;re At</h1>
 
-<ul>
-<li>throw error</li>
-<li>add</li>
-</ul>
-
-<h1>When All Else Fails, Add an IF:</h1>
-
-<p>But some issues can’t be brushed away through runtime polymorphism.  For example, a Throwable is required to be defined at Compile time.  Our previous platform strategy won’t work.  Instead we’ll be limited to macros and we’ll nefariously switch compile time object types during macro expansion.  We’ll do this by determining if a macro file is expanding in a clojure or clojurescript context.  This is the necessary-hack portion of the how-to. </p>
-
-<p>We’ll determine the macro expansion context by simply checking to see if a file necessary to cljs compilation is present.  This is fragile since that file could change or something, really anything could change the feedback for the if statement leaving us with a broken program.  But such life in the land of ClojureScript.  Here is an example of what might work:</p>
-
-<ul>
-<li>cljs hack</li>
-</ul>
-
-<p>So here, we’re seeing if we can find the cljs.analyzer namespace and choose which compile-time pieces to add to our macros based off of that result.</p>
-
-<p>Of course clojure macros are a monster in themselves but for this how-to you really don’t need to know much other than that the form after the tilde will be evaluated during expansion time, meaning that at compile time the if statement will be gone and the only thing that will remain will be the result of that if statement.  So by compile time all that should be left is exactly what we want for each platform.  Here is an example using the Throwable object in Java.</p>
-
-<ul>
-<li>throwable</li>
-</ul>
-
-<h1>NS-Resolve Your Last Concerns Away</h1>
-
-<p>So we’re so close to being done but you might run into one additional problem.  What if the cljs part of your (cljs?) hack references a cljs file?  clojure will attempt to find the namespace before the if statement is evaluated, thus you’ll get a compile time error.  Here is an example of this error:</p>
-
-<p>-cljs-compiler issue</p>
-
-<p>We can get around this by using “ns-resolve”  with a namespace and function argument.  Now the cljs.compiler namespace will not need to be resolved until runtime and only when it runs.  Since that code shouldn’t be called in the first place.  </p>
-
-<h1>Combining it All into One:</h1>
-
-<p>So now things finally work.  Let’s combine them into one jar and see if it runs in both clojure and clojurescript.  For this we’ll create a production profile that will combine our clj and cljs files.  </p>
+<p>Now we&#39;ve seen how to use platform files to isolate platform difference in both normal functions and clojure macros.  These platform files can get you far, but they don&#39;t get you all the way there.  In [Part 7[part_7] we&#39;ll see how to use an ugly but effective &quot;if&quot; statement to get essentially complete cross-platform functionality.</p>
 
 </div>
 
