@@ -10,7 +10,7 @@ categories: jekyll update
 [part_4]:http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt4-cljx.html 
 [cljx]: https://github.com/lynaghk/cljx
 
-Here is a link to our [sample project][sample_project] that shows the end result of this part (Part 3) of Tutorial
+Here is a link to our [sample project][sample_project] that shows the end result of this part (Part 3) of the tutorial
 
 #Dividing Your ClassPaths with Profiles:
 
@@ -61,7 +61,7 @@ The ClojureScript testing alias looks very similar:
 
 Now, if you have `Speclj` configured correctly, you can run `lein clj-test` and `lein cljs-test` from the command line to run your Clojure and ClojureScript tests respectively.
 
-With our profiles in place, we can move ot [Part 4][part_4], where we will add the [CLJX][cljx] dependency.
+With our profiles in place, we can move to [Part 4][part_4], where we will add the [CLJX][cljx] dependency.
 
 And again, here is a link to our [sample project][sample_project] that shows a working sample project up to and through this part of the tutorial.
 

@@ -10,11 +10,11 @@ categories: jekyll update
 [sample_project]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/base_project
 [part_3]: http://localhost:4000/jekyll/update/2014/02/08/clj-cljs-pt3-dividing-profiles.html
 
-#Seting Up You Base Project:
+#Setting Up Your Base Project:
 
-A [Sample Base Project][sample_project] is available if you would like to use it.  It already has [Speclj][speclj] installed and running for both Clojure and ClojureScript.  We will be referencing this project throught this tutorial.  
+A [Sample Base Project][sample_project] is available if you would like to use it.  It already has [Speclj][speclj] installed and running for both Clojure and ClojureScript.  We will be referencing this project throughout this tutorial.  
 
-Regardless of whether you use the sample project, you project structure should look similar.  This is especially true in how your `src/` and `spec/` paths should looks.  You'll want a structure like `src/file-type/project-name/code.file-type`.  For example, in the sample project we have `src/clj/myproject/core.clj` for Clojure source and `src/cljs/myproject/core.cljs` for the ClojureScript source. 
+Regardless of whether you use the sample project, your project structure should look similar.  This is especially true in how your `src/` and `spec/` paths should look.  You'll want a structure like `src/file-type/project-name/code.file-type`.  For example, in the sample project we have `src/clj/myproject/core.clj` for Clojure source and `src/cljs/myproject/core.cljs` for the ClojureScript source. 
 
 A similar structure should be used for your tests.
 
@@ -39,4 +39,4 @@ myproject
 {% endhighlight %}
 
 #Where We Are
-We now have a base project template that can be used to get a sense of the structure of our project, but that's about it.  In [Part 3][part_3] of this tutorial we'll use profiles separate our Clojure and ClojureScript classpaths.
+We now have a base project template that can be used to get a sense of the structure of our project, but that's about it.  In [Part 3][part_3] of this tutorial we'll use profiles to separate our Clojure and ClojureScript classpaths.

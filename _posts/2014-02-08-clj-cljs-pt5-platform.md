@@ -11,7 +11,7 @@ categories: jekyll update
 
 #Using Platform Files to Isolate Library Differences
 
-Now that we can write a single file that ultimate becomes separate `.clj` and `.cljs` files, we can look at how we're going to deal with the differences in the Clojure and ClojureScript platforms.
+Now that we can write a single file that ultimately becomes separate `.clj` and `.cljs` files, we can look at how we're going to deal with the differences in the Clojure and ClojureScript platforms.
 
 We will isolate these differences in two files (one `.clj` and one `.cljs`) with the same file name and same namespace name. We will then reference this common namespace in our code.  When our clojure code runs, the `.clj` namespace will execute, and when we run our ClojureScript code, our `.cljs` namespace will execute.  Thus the rest of our files can be written without a need to focus on platform details.
 

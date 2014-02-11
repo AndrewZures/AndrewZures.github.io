@@ -58,7 +58,7 @@ Let's now add a namespace and simple `abs` function to `macro.clj`.
       `(myproject.platform/abs ~x))
 {% endhighlight %}
 
-Now here is where things get interesting.  As you can see we've commmented out the  `:require` statement and our macro function uses a fully qualified namespace.  It seems like our macro might not be able to find the platform namespace.  But let's run our tests.
+Now here is where things get interesting.  As you can see we've commented out the  `:require` statement and our macro function uses a fully qualified namespace.  It seems like our macro might not be able to find the platform namespace.  But let's run our tests.
 
 They should pass!
 

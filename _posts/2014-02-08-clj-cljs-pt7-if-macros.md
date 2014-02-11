@@ -30,7 +30,7 @@ In your `shared_file_spec.cljx` files add this test:
 
 In this test, we're attempting to `slurp` a bad file name.  In both Clojure and ClojureScript, this will raise an exception.  But exceptions are a little different in Java and JavaScript.  Java will require an `Exception` while JavaScript will use a `js/Ojbect`. You can see the [Clojure documentation][clojure_documentation] for an example of both situations.
 
-Let's see go to our `macros.clj` file and see what we can do to pass this test for both platform.
+Let's go to our `macros.clj` file and see what we can do to pass this test for both platforms.
 
 Here's what the Clojure version might look like.  But of course it won't work in ClojureScript.  ClojureScript won't know what to do with `Exception`.
 
