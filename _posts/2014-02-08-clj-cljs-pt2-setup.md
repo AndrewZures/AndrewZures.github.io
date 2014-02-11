@@ -8,16 +8,23 @@ categories: jekyll update
 [8thLight]: https://8thlight.com
 [speclj]:    https://github.com/slagyr/speclj 
 [sample_project]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/base_project
-[part_3]: http://localhost:4000/jekyll/update/2014/02/08/clj-cljs-pt3-dividing-profiles.html
+
+[part_1]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt1-context.html 
+[part_2]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt2-setup.html
+[part_3]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt3-dividing-profiles.html
+[part_4]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt4-cljx.html
+[part_5]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt5-platform.html
+[part_6]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt6-platform-and-macros.html
+[part_7]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt7-if-macros.html
+[part_8]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt8-combining-profiles.html
 
 #Setting Up Your Base Project:
 
-A [Sample Base Project][sample_project] is available if you would like to use it.  It already has [Speclj][speclj] installed and running for both Clojure and ClojureScript.  We will be referencing this project throughout this tutorial.  
+A [Sample Base Project][sample_project] is available if you would like to use it.  It already has [Speclj][speclj] installed and running for both Clojure and ClojureScript.  It also has branches with working code for each part of this tutorial.  We will be referencing this project throughout this tutorial.  
 
-Regardless of whether you use the sample project, your project structure should look similar.  This is especially true in how your `src/` and `spec/` paths should look.  You'll want a structure like `src/file-type/project-name/code.file-type`.  For example, in the sample project we have `src/clj/myproject/core.clj` for Clojure source and `src/cljs/myproject/core.cljs` for the ClojureScript source. 
+Regardless of whether you use the sample project, your project structure should look similar its structure.  This is especially true for your `src/` and `spec/` paths.  You'll want a structure that resembles `src/file-type/project-name/code.file-type`.  For example, in the sample project we have `src/clj/myproject/core.clj` for Clojure source and `src/cljs/myproject/core.cljs` for the ClojureScript source. 
 
 A similar structure should be used for your tests.
-
 
 {% highlight clojure %}
 myproject
@@ -39,4 +46,21 @@ myproject
 {% endhighlight %}
 
 #Where We Are
-We now have a base project template that can be used to get a sense of the structure of our project, but that's about it.  In [Part 3][part_3] of this tutorial we'll use profiles to separate our Clojure and ClojureScript classpaths.
+We now have the proper project structure, but that's about it.  In [Part 3][part_3] of this tutorial we'll use profiles to separate our Clojure and ClojureScript classpaths.
+
+[Part 1: A Bit Of Context][part_1]
+
+[Part 2: Setting Up Your Base Project][part_2]
+
+[Part 3: Dividing Profiles][part_3]
+
+[Part 4: Using CLJX][part_4]
+
+[Part 5: Platform Files][part_5]
+
+[Part 6: Platform Files and Macros][part_6]
+
+[Part 7: Context Aware Macros][part_7]
+
+[Part 8: One Jar to Rule Them All][part_8]
+

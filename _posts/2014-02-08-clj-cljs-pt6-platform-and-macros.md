@@ -7,9 +7,17 @@ categories: jekyll update
 
 [8thLight]: https://8thlight.com
 [speclj]:  https://github.com/slagyr/speclj 
-[part_5]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt5-platform.html  
-[part_7]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt7-if-macros.html
 [sample_project]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/macro_dependency
+
+[part_1]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt1-context.html 
+[part_2]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt2-setup.html
+[part_3]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt3-dividing-profiles.html
+[part_4]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt4-cljx.html
+[part_5]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt5-platform.html
+[part_6]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt6-platform-and-macros.html
+[part_7]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt7-if-macros.html
+[part_8]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt8-combining-profiles.html
+
 
 Here is [Sample Project][sample_project] with working code and tests through this part (Part 6) of the tutorial.
 
@@ -69,3 +77,19 @@ It seems like we should `:require` our platform namespace since the file uses it
 #Where We're At
 
 Now we've seen how to use platform files to isolate platform difference in both normal functions and clojure macros.  These platform files can get you far, but they don't get you all the way there.  In [Part 7][part_7] we'll see how to use an ugly but effective "if" statement to get essentially complete cross-platform functionality.
+
+[Part 1: A Bit Of Context][part_1]
+
+[Part 2: Setting Up Your Base Project][part_2]
+
+[Part 3: Dividing Profiles][part_3]
+
+[Part 4: Using CLJX][part_4]
+
+[Part 5: Platform Files][part_5]
+
+[Part 6: Platform Files and Macros][part_6]
+
+[Part 7: Context Aware Macros][part_7]
+
+[Part 8: One Jar to Rule Them All][part_8]

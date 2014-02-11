@@ -9,7 +9,15 @@ categories: jekyll update
 [speclj]:    https://github.com/slagyr/speclj 
 [cljx]: https://github.com/lynaghk/cljx
 [sample_project]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/cljx
+
+[part_1]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt1-context.html 
+[part_2]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt2-setup.html
+[part_3]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt3-dividing-profiles.html
+[part_4]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt4-cljx.html
 [part_5]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt5-platform.html
+[part_6]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt6-platform-and-macros.html
+[part_7]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt7-if-macros.html
+[part_8]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt8-combining-profiles.html
 
 Here is our continuing [Sample Project][sample_project] with working code up to this part (Part 4) of the tutorial.
 
@@ -151,6 +159,22 @@ Now that we have cljx set up and a `.cljx` file and test file, we can run `lein 
 #Where We Are
 
 Now we have a single `.cljx` source and spec file that will be generated into separate `.clj` and `.cljs` files.  And we can test our code in both Clojure and ClojureScript.  In [Part 5][part_5] we will finally get to writing some code that will help us build one functional source for Clojure and Clojurescript.
+
+[Part 1: A Bit Of Context][part_1]
+
+[Part 2: Setting Up Your Base Project][part_2]
+
+[Part 3: Dividing Profiles][part_3]
+
+[Part 4: Using CLJX][part_4]
+
+[Part 5: Platform Files][part_5]
+
+[Part 6: Platform Files and Macros][part_6]
+
+[Part 7: Context Aware Macros][part_7]
+
+[Part 8: One Jar to Rule Them All][part_8]
 
 ----
 

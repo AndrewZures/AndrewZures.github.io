@@ -29,7 +29,7 @@
 
 <h1>Working With CLJX:</h1>
 
-<p>Next, we&#39;ll use the <a href="https://github.com/lynaghk/cljx">CLJX</a> library.  CLJX translates a <code>.cljx</code> files into separate <code>.cljs</code> and <code>.clj</code> files.  You can use small <code>#+cljs</code> an <code>#+clj</code> tags to differentiate which forms you would like included in which version.  In the 8th Light <a href="https://github.com/slagyr/speclj">Speclj</a> project, CLJX replaced our hand-rolled pre-compiler.  this gave us the benefit of relying on an open-source, updated dependency instead of our own program.  </p>
+<p>Next, we&#39;ll use the <a href="https://github.com/lynaghk/cljx">CLJX</a> library.  CLJX translates a <code>.cljx</code> files into separate <code>.cljs</code> and <code>.clj</code> files.  You can use small <code>#+cljs</code> an <code>#+clj</code> tags to differentiate which forms you would like included in which version.  In the 8th Light <a href="https://github.com/slagyr/speclj">Speclj</a> project, CLJX replaced our hand-rolled pre-compiler.  This gave us the benefit of relying on an open-source, updated dependency instead of our own program.  </p>
 
 <p>However, CLJX comes with a few downsides.  First, you&#39;ll have to keep track of the status of your cljx results. If you make a change in a <code>.cljx</code> file and, for whatever reason, do not recompile the cljx folder, your changes will not appear in your <code>.clj</code> and <code>.cljs</code> files.  Second, You should be careful to not make changes to the generated <code>.clj</code> and <code>.cljs</code> files since they will be overridden the next time you generate your <code>cljx</code> output.  Third, if you&#39;re running a test autorunner, it will likely not pick up changes to .cljx files.</p>
 
@@ -37,7 +37,7 @@
 
 <h1>Adding CLJX to your Project.clj</h1>
 
-<p>To add <a href="https://github.com/lynaghk/cljx">CLJX</a> simply add <code>[com.keminglabs/cljx &quot;0.3.1&quot;]</code> to you general <code>:dependencies</code> map. You will then have to add configure src and output paths to the <code>:cljx</code> key:</p>
+<p>To add <a href="https://github.com/lynaghk/cljx">CLJX</a> simply add <code>[com.keminglabs/cljx &quot;0.3.1&quot;]</code> to your general <code>:dependencies</code> map. You will then have to configure source and output paths in the <code>:cljx</code> key:</p>
 
 <div class="highlight"><pre><code class="clojure"><span class="lineno"> 1</span>     <span class="ss">:cljx</span> <span class="p">{</span><span class="ss">:builds</span> <span class="p">[{</span><span class="ss">:source-paths</span> <span class="p">[</span><span class="s">&quot;src/cljx&quot;</span><span class="p">]</span>
 <span class="lineno"> 2</span>                      <span class="ss">:output-path</span> <span class="s">&quot;target/generated/src/clj&quot;</span>
@@ -106,7 +106,7 @@
 
 <h1>Adding a .cljx File to your Project</h1>
 
-<p>If you are using the <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/cljx">sample project</a> you&#39;ll see that the we already have <code>src/clj/myproject/core.clj</code> and <code>src/cljs/myproject/core.cljs</code>.  We&#39;ll create a similar directory structure for the <code>.cljx</code> files.  </p>
+<p>If you are using the <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/cljx">sample project</a> you&#39;ll see that we already have <code>src/clj/myproject/core.clj</code> and <code>src/cljs/myproject/core.cljs</code>.  We&#39;ll create a similar directory structure for the <code>.cljx</code> files.  </p>
 
 <p>Let&#39;s make a <code>src/cljx/myproject/</code> folder and add <code>shared_file.cljx</code> to the new folder.  Next, let&#39;s make a <code>spec/cljx/myproject/</code> folder and add <code>shared_file_spec.cljx</code>.</p>
 
@@ -143,7 +143,23 @@
 
 <h1>Where We Are</h1>
 
-<p>Now we have a single <code>.cljx</code> source and spec file that will be generated into separate <code>.clj</code> and <code>.cljs</code> files.  And we can our code in both Clojure and ClojureScript.  In <a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt5-platform.html">Part 5</a> we will finall get to writing some code that will help us build one functional source for Clojure and Clojurescript.</p>
+<p>Now we have a single <code>.cljx</code> source and spec file that will be generated into separate <code>.clj</code> and <code>.cljs</code> files.  And we can test our code in both Clojure and ClojureScript.  In <a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt5-platform.html">Part 5</a> we will finally get to writing some code that will help us build one functional source for Clojure and Clojurescript.</p>
+
+<p><a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt1-context.html">Part 1: A Bit Of Context</a></p>
+
+<p><a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt2-setup.html">Part 2: Setting Up Your Base Project</a></p>
+
+<p><a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt3-dividing-profiles.html">Part 3: Dividing Profiles</a></p>
+
+<p><a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt4-cljx.html">Part 4: Using CLJX</a></p>
+
+<p><a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt5-platform.html">Part 5: Platform Files</a></p>
+
+<p><a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt6-platform-and-macros.html">Part 6: Platform Files and Macros</a></p>
+
+<p><a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt7-if-macros.html">Part 7: Context Aware Macros</a></p>
+
+<p><a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt8-combining-profiles.html">Part 8: One Jar to Rule Them All</a></p>
 
 <hr>
 

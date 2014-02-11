@@ -43,7 +43,7 @@
 
 <p>In this test, we&#39;re attempting to <code>slurp</code> a bad file name.  In both Clojure and ClojureScript, this will raise an exception.  But exceptions are a little different in Java and JavaScript.  Java will require an <code>Exception</code> while JavaScript will use a <code>js/Ojbect</code>. You can see the <a href="http://clojuredocs.org/clojure_core/1.2.0/clojure.core/try">Clojure documentation</a> for an example of both situations.</p>
 
-<p>Let&#39;s see go to our <code>macros.clj</code> file and see what we can do to pass this test for both platform.</p>
+<p>Let&#39;s go to our <code>macros.clj</code> file and see what we can do to pass this test for both platforms.</p>
 
 <p>Here&#39;s what the Clojure version might look like.  But of course it won&#39;t work in ClojureScript.  ClojureScript won&#39;t know what to do with <code>Exception</code>.</p>
 
@@ -97,7 +97,23 @@
 
 <h1>Where We&#39;re At</h1>
 
-<p>So now we&#39;ve seen how to use platform files to isolate platform-specific code and we&#39;ve also seen a little hack that can help when macros must be defined a platform-specific manner.  In <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/macro_dependenc://github.com/AndrewZures/combining_clj_cljs_libraries/tree/one_jar">Part 8</a> of this tutorial we&#39;ll put it all together, quite literally, and combine our Clojure and ClojureScript libraries into a single jar.</p>
+<p>So now we&#39;ve seen how to use platform files to isolate platform-specific code and we&#39;ve also seen a little hack that can help when macros must be defined a platform-specific manner.  In <a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt8-combining-profiles.html">Part 8</a> of this tutorial we&#39;ll put it all together, quite literally, and combine our Clojure and ClojureScript libraries into a single jar.</p>
+
+<p><a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt1-context.html">Part 1: A Bit Of Context</a></p>
+
+<p><a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt2-setup.html">Part 2: Setting Up Your Base Project</a></p>
+
+<p><a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt3-dividing-profiles.html">Part 3: Dividing Profiles</a></p>
+
+<p><a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt4-cljx.html">Part 4: Using CLJX</a></p>
+
+<p><a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt5-platform.html">Part 5: Platform Files</a></p>
+
+<p><a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt6-platform-and-macros.html">Part 6: Platform Files and Macros</a></p>
+
+<p><a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt7-if-macros.html">Part 7: Context Aware Macros</a></p>
+
+<p><a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt8-combining-profiles.html">Part 8: One Jar to Rule Them All</a></p>
 
 </div>
 
