@@ -17,6 +17,7 @@ categories: jekyll update
 [part_6]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt6-platform-and-macros.html
 [part_7]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt7-if-macros.html
 [part_8]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt8-combining-profiles.html
+[part_9]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt9-final-thoughts.html
 
 Here is a link to our [sample project][sample_project] that shows the end result of this part (Part 3) of the tutorial
 
@@ -88,6 +89,8 @@ And again, here is a link to our [sample project][sample_project] that shows a w
 [Part 7: Context Aware Macros][part_7]
 
 [Part 8: One Jar to Rule Them All][part_8]
+
+[Part 9: Final Thoughts][part_9]
 
 
 ----
