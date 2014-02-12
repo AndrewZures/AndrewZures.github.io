@@ -35,7 +35,12 @@
 
 <h1>Platform Files and Macros: An Example</h1>
 
-<p>Let&#39;s add a new test to our <code>shared_file.cljx</code> file which will test a simple macro.</p>
+<p>First, we need to tweak your <code>platform.clj</code> file.  Add the snippet below to your <code>:cljs</code> profile.  That way your Clojure macro will be available to your ClojureScript profile.</p>
+
+<div class="highlight"><pre><code class="clojure"><span class="lineno">1</span>     <span class="ss">:source-paths</span> <span class="p">[</span><span class="s">&quot;src/clj&quot;</span><span class="p">]</span>
+</code></pre></div>
+
+<p>Now let&#39;s add a new test to our <code>shared_file.cljx</code> file which will test a simple macro.</p>
 
 <p>Create a <code>macro.clj</code> file in your <code>src/clj/myproject/</code> folder. You can leave it empty for now.</p>
 

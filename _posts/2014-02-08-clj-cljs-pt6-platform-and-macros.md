@@ -30,7 +30,13 @@ The issue with macros is that there will be no equivalent `.cljs` macro file.  M
 
 #Platform Files and Macros: An Example
 
-Let's add a new test to our `shared_file.cljx` file which will test a simple macro.
+First, we need to tweak your `platform.clj` file.  Add the snippet below to your `:cljs` profile.  That way your Clojure macro will be available to your ClojureScript profile.
+
+{% highlight clojure linenos %}
+    :source-paths ["src/clj"]
+{% endhighlight %}
+
+Now let's add a new test to our `shared_file.cljx` file which will test a simple macro.
 
 Create a `macro.clj` file in your `src/clj/myproject/` folder. You can leave it empty for now.
 
