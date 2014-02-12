@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Combining Clojure and ClojureScript Libraries - Part 8: A Single Jar"
+title:  "Combining Clojure and ClojureScript Libraries - Part 8: One Jar To Rule Them All"
 date:   2014-02-08 09:57:23
 categories: jekyll update
 ---
@@ -19,13 +19,15 @@ categories: jekyll update
 [part_8]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt8-combining-profiles.html
 [part_9]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt9-final-thoughts.html
 
+[project_part_8]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/part_8_one_jar
+
 ------
 
-Here is [Sample Project][sample_project] with working code and tests through this part (Part 7) of the tutorial.
+Here is [Sample Project][project_part_8] with working code and tests through this part (Part 8) of the tutorial.
 
 #Adding Clojure and ClojureScript Code to a Single Jar
 
-In the previous parts of this tutorial we've built a code base that can deliver the same functionality in both Clojure and ClojureScript.  Now we'll see how we can deploy this functionality in one Jar.  This gives others the ability to import one library and gain your clj and cljs functionality.
+In the previous parts of this tutorial we've built a code base that can deliver the same functionality in both Clojure and ClojureScript.  Now we'll see how we can deploy this functionality in one Jar.  This gives others the ability to import one library and gain both your `clj` and `cljs` functionality.
 
 Let's go to our `project.clj` file.  We'll add an entirely new profile called "combined"
 
@@ -76,7 +78,7 @@ All we have to do now is install our project using the `combined` profile.  Agai
    "install" ["do" "clean," "with-profile" "combined" "install"]
 {% endhighlight %}
 
-Now we can `lein install` and we will have a single library that will work for both Clojure and ClojureScript.
+Now we can `lein install` and we will have a single library that will work for both Clojure and ClojureScript.  That's All!  If you would like a detailed breakdown of tutorial parts and their related sample project branch go to [Part 9][part_9]
 
 [Part 1: A Bit Of Context][part_1]
 

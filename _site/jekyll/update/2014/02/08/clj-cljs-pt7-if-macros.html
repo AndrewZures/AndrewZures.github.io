@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Combining Clojure and ClojureScript Libraries - Part 7: Fragile 'If's</title>
+        <title>Combining Clojure and ClojureScript Libraries - Part 7: Context Aware Macros</title>
         <meta name="viewport" content="width=device-width">
 
         <!-- syntax highlighting CSS -->
@@ -21,19 +21,19 @@
             <a class="extra" href="/">home</a>
           </div>
 
-          <h2>Combining Clojure and ClojureScript Libraries - Part 7: Fragile 'If's</h2>
+          <h2>Combining Clojure and ClojureScript Libraries - Part 7: Context Aware Macros</h2>
 <p class="meta">08 Feb 2014</p>
 
 <div class="post">
 <p>Here is <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/throwable">Sample Project</a> with working code and tests through this part (Part 7) of the tutorial.</p>
 
-<h1>Using a Fragile &quot;If&quot; Statement to Get a Bit More Functionality</h1>
+<h1>Using a Powerful but Perilous Context Aware Macros to Get a Bit More Functionality</h1>
 
 <p>In the previous portion of this tutorial, we were able to get a great deal of cross-platform functionality using platform files. But now we&#39;ll look at a way to define a clojure macro with platform-specific code, using a very fragile if statement.  </p>
 
 <p>First, let&#39;s look at an example:</p>
 
-<h1>Fragile If: An Example</h1>
+<h1>Context Aware Macros: An Example</h1>
 
 <p>In your <code>shared_file_spec.cljx</code> files add this test:</p>
 
@@ -65,7 +65,7 @@
 
 <p>We have two separate macros that simply won&#39;t work on both platforms.  But what if we could determine if the <code>macro.clj</code> file was expanding in a Clojure context or a ClojureScript context. Maybe then we could use this information to build the correct macro for the currently-executing library. </p>
 
-<p>This is where our &quot;fragile if&quot; statement comes into play.  It looks like this:</p>
+<p>This is where a fragile &quot;if&quot; statement comes into play.  It looks like this:</p>
 
 <div class="highlight"><pre><code class="clojure"><span class="lineno">1</span> <span class="p">(</span><span class="kd">defn </span><span class="nv">cljs?</span> <span class="p">[]</span>
 <span class="lineno">2</span>     <span class="p">(</span><span class="nb">boolean </span><span class="p">(</span><span class="nb">find-ns </span><span class="ss">&#39;cljs.analyzer</span><span class="p">)))</span>
@@ -82,22 +82,22 @@
 <span class="lineno">7</span>  <span class="p">)</span>
 </code></pre></div>
 
-<p>If we try this macro, it will pass the tests for both platforms.  It does this by adding the correct platform-specific catch statement during macro expansion.  This may seem like it has opened up an amazing set of functionality but the if statement is fragile.  It relies on the existence (or lack thereof) of a ClojureScript specific namespace.  If something changed in ClojureScript, the entire library could fail.  Thus this is a bit of hack.  But it gets us where we want to go and there are few other options.  </p>
+<p>If we try this macro, it will pass the tests for both platforms.  It does this by adding the correct platform-specific catch statement during macro expansion.  Thus we have a macro that, to some degree, is away of the context of its expansion.   This may seem like it has opened up an amazing set of functionality but the if statement is fragile.  It relies on the existence (or lack thereof) of a ClojureScript specific namespace.  If something changed in ClojureScript, the entire library could fail.  Thus this is a bit of hack.  But it gets us where we want to go and there are few other options.  </p>
 
 <h1>ns-resolve Can Help Too</h1>
 
-<p>As a brief side note.  The hack noted above will still fail if the clojure compiler cannot recognize the name of a currently absent ClojureScript namespace. An example is <code>cljs.compiler/munge</code>. If this included in a <code>.clj</code> macro, your Clojure-side tests will fails because Clojure will not find the namespace.  </p>
+<p>As a brief side note, the hack noted above will still fail if the Clojure compiler cannot recognize the name of a currently absent ClojureScript namespace. An example is <code>cljs.compiler/munge</code>. If this included in a <code>.clj</code> macro, your Clojure-side tests will fails because Clojure will not find the namespace.  </p>
 
 <p>However we can get around this using <code>ns-resolve</code>.  Instead of referencing <code>cljs.compiler/munge</code> we can replace it with:</p>
 
 <div class="highlight"><pre><code class="clojure"><span class="lineno">1</span> <span class="p">(</span><span class="nf">ns-reolve</span> <span class="ss">&#39;cljs.compiler</span> <span class="s">&quot;munge&quot;</span><span class="p">)</span>
 </code></pre></div>
 
-<p>This will remove the compile check of the <code>cljs.compiler</code> namespace.</p>
+<p>This will essentially push the <code>cljs.compiler</code> namespace check to runtime.  If you have your macro setup correctly, the <code>cljs</code> namespace should never be called in Clojure.</p>
 
 <h1>Where We&#39;re At</h1>
 
-<p>So now we&#39;ve seen how to use platform files to isolate platform-specific code and we&#39;ve also seen a little hack that can help when macros must be defined a platform-specific manner.  In <a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt8-combining-profiles.html">Part 8</a> of this tutorial we&#39;ll put it all together, quite literally, and combine our Clojure and ClojureScript libraries into a single jar.</p>
+<p>So now we&#39;ve seen how to use platform files to isolate platform-specific code and we&#39;ve also seen a little hack that can help when macros must be defined in a platform-specific manner.  In <a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt8-combining-profiles.html">Part 8</a> of this tutorial we&#39;ll put it all together, quite literally, and combine our Clojure and ClojureScript libraries into a single jar.</p>
 
 <p><a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt1-context.html">Part 1: A Bit Of Context</a></p>
 

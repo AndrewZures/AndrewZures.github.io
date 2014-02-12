@@ -7,7 +7,8 @@ categories: jekyll update
 
 [8thLight]: https://8thlight.com
 [speclj]:    https://github.com/slagyr/speclj 
-[sample_project]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/base_project
+
+[project_part_1_thru_3]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/part_1_thru_3_base_proj 
 
 [part_1]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt1-context.html 
 [part_2]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt2-setup.html
@@ -21,7 +22,7 @@ categories: jekyll update
 
 #Setting Up Your Base Project:
 
-A [Sample Base Project][sample_project] is available if you would like to use it.  It already has [Speclj][speclj] installed and running for both Clojure and ClojureScript.  It also has branches with working code for each part of this tutorial.  We will be referencing this project throughout this tutorial.  
+A [Sample Base Project][project_part_1_thru_3] is available if you would like to use it.  It already has [Speclj][speclj] installed and running for both Clojure and ClojureScript.  It also has branches with working code for each part of this tutorial.  We will be referencing this project throughout this tutorial.  
 
 Regardless of whether you use the sample project, your project structure should look similar its structure.  This is especially true for your `src/` and `spec/` paths.  You'll want a structure that resembles `src/file-type/project-name/code.file-type`.  For example, in the sample project we have `src/clj/myproject/core.clj` for Clojure source and `src/cljs/myproject/core.cljs` for the ClojureScript source. 
 

@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Combining Clojure and ClojureScript Libraries - Part 8: A Single Jar</title>
+        <title>Combining Clojure and ClojureScript Libraries - Part 8: One Jar To Rule Them All</title>
         <meta name="viewport" content="width=device-width">
 
         <!-- syntax highlighting CSS -->
@@ -21,17 +21,17 @@
             <a class="extra" href="/">home</a>
           </div>
 
-          <h2>Combining Clojure and ClojureScript Libraries - Part 8: A Single Jar</h2>
+          <h2>Combining Clojure and ClojureScript Libraries - Part 8: One Jar To Rule Them All</h2>
 <p class="meta">08 Feb 2014</p>
 
 <div class="post">
 <hr>
 
-<p>Here is <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/one_jar">Sample Project</a> with working code and tests through this part (Part 7) of the tutorial.</p>
+<p>Here is <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/part_8_one_jar">Sample Project</a> with working code and tests through this part (Part 8) of the tutorial.</p>
 
 <h1>Adding Clojure and ClojureScript Code to a Single Jar</h1>
 
-<p>In the previous parts of this tutorial we&#39;ve built a code base that can deliver the same functionality in both Clojure and ClojureScript.  Now we&#39;ll see how we can deploy this functionality in one Jar.  This gives others the ability to import one library and gain your clj and cljs functionality.</p>
+<p>In the previous parts of this tutorial we&#39;ve built a code base that can deliver the same functionality in both Clojure and ClojureScript.  Now we&#39;ll see how we can deploy this functionality in one Jar.  This gives others the ability to import one library and gain both your <code>clj</code> and <code>cljs</code> functionality.</p>
 
 <p>Let&#39;s go to our <code>project.clj</code> file.  We&#39;ll add an entirely new profile called &quot;combined&quot;</p>
 
@@ -78,7 +78,7 @@
 <div class="highlight"><pre><code class="clojure"><span class="lineno">1</span>    <span class="s">&quot;install&quot;</span> <span class="p">[</span><span class="s">&quot;do&quot;</span> <span class="s">&quot;clean,&quot;</span> <span class="s">&quot;with-profile&quot;</span> <span class="s">&quot;combined&quot;</span> <span class="s">&quot;install&quot;</span><span class="p">]</span>
 </code></pre></div>
 
-<p>Now we can <code>lein install</code> and we will have a single library that will work for both Clojure and ClojureScript.</p>
+<p>Now we can <code>lein install</code> and we will have a single library that will work for both Clojure and ClojureScript.  That&#39;s All!  If you would like a detailed breakdown of tutorial parts and their related sample project branch go to <a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt9-final-thoughts.html">Part 9</a></p>
 
 <p><a href="http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt1-context.html">Part 1: A Bit Of Context</a></p>
 

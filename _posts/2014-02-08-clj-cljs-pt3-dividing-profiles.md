@@ -18,8 +18,9 @@ categories: jekyll update
 [part_7]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt7-if-macros.html
 [part_8]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt8-combining-profiles.html
 [part_9]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt9-final-thoughts.html
+[project_part_1_thru_3]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/part_1_thru_3_base_proj 
 
-Here is a link to our [sample project][sample_project] that shows the end result of this part (Part 3) of the tutorial
+Here is a link to our [sample project][project_part_1_thru_3] that shows the end result of this part (Part 3) of the tutorial
 
 #Dividing Your ClassPaths with Profiles:
 
@@ -34,7 +35,7 @@ Both profiles will use the `org.clojure/clojure` and `speclj` dependency so they
          }
 {% endhighlight %}
 
-For the `:cljs` profile, we'll need the standard `:cljsbuild` information.  Additionally, the sample base project uses `speclj` for testing so we'll see some syntax necessary for speclj as well.
+For the `:cljs` profile, we'll need the standard `:cljsbuild` information.  Additionally, the sample base project uses `speclj` for testing so we'll see some syntax necessary for Speclj as well.
 
 {% highlight clojure linenos %}
          :cljs {:dependencies [[org.clojure/clojurescript "0.0-2014"] ;necessary for current version of speclj
@@ -71,8 +72,6 @@ The ClojureScript testing alias looks very similar:
 Now, if you have `Speclj` configured correctly, you can run `lein clj-test` and `lein cljs-test` from the command line to run your Clojure and ClojureScript tests respectively.
 
 With our profiles in place, we can move to [Part 4][part_4], where we will add the [CLJX][cljx] dependency.
-
-And again, here is a link to our [sample project][sample_project] that shows a working sample project up to and through this part of the tutorial.
 
 [Part 1: A Bit Of Context][part_1]
 

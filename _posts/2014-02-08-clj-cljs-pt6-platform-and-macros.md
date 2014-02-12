@@ -19,8 +19,10 @@ categories: jekyll update
 [part_8]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt8-combining-profiles.html
 [part_9]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt9-final-thoughts.html
 
+[project_part_6]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/part_6_platform_and_macros 
 
-Here is [Sample Project][sample_project] with working code and tests through this part (Part 6) of the tutorial.
+
+Here is [Sample Project][project_part_6] with working code and tests through this part (Part 6) of the tutorial.
 
 #Using Platform Files with Macros
 
@@ -53,7 +55,7 @@ Your namespace should now look like this:
 )
 {% endhighlight %}
 
-For this example, we'll test add our existing `platform/abs` function to a macro.  Add a new test that will evaluate an `abs` function located in your macro file
+For this example, we'll add our existing `platform/abs` functionality to a macro.  But tests come first!  Add a new test that will evaluate an `abs` function located in your macro file:
 
 {% highlight clojure linenos %}
   (it "finds absolute value using macro"
@@ -79,7 +81,7 @@ They should pass!
 
 Now uncomment the `:require` statement and rerun your tests.  Your ClojureScript tests will fail to run!
 
-It seems like we should `:require` our platform namespace since the file uses it, but this will actually break the ClojureScript-side tests.  This is because the macro file will always attempt to evaluate the `.clj` version of our platform file if it is defined in the `:require` namespace.  By using a fully-qualified namespace in our macro instead of referencing it through a `:require` statement, the correct platform file will be evaluated at macro expansion.  So, in this case, you should not require the platform file but instead use its fully-qualified namespace where it is needed.
+It seems like we should `:require` our platform namespace since the file uses it, but this will actually break the ClojureScript-side tests.  This is because the macro file will always attempt to evaluate the `.clj` version of our platform file if it is defined in the `:require` namespace.  By using a fully-qualified namespace in our macro instead of referencing it through a `:require` statement, the correct platform file will be evaluated at macro expansion.  So, when it comes to macros, you should not `:require` the platform file but instead use its fully-qualified namespace where it is needed.
 
 #Where We're At
 

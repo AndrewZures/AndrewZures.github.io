@@ -25,7 +25,7 @@
 <p class="meta">08 Feb 2014</p>
 
 <div class="post">
-<p>Here is our continuing <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/cljx">Sample Project</a> with working code up to this part (Part 4) of the tutorial.</p>
+<p>Here is our continuing <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/part_4_cljx">Sample Project</a> with working code up to this part (Part 4) of the tutorial.</p>
 
 <h1>Working With CLJX:</h1>
 
@@ -106,7 +106,7 @@
 
 <h1>Adding a .cljx File to your Project</h1>
 
-<p>If you are using the <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/cljx">sample project</a> you&#39;ll see that we already have <code>src/clj/myproject/core.clj</code> and <code>src/cljs/myproject/core.cljs</code>.  We&#39;ll create a similar directory structure for the <code>.cljx</code> files.  </p>
+<p>If you are using the <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/part_4_cljx">sample project</a> you&#39;ll see that we already have <code>src/clj/myproject/core.clj</code> and <code>src/cljs/myproject/core.cljs</code>.  We&#39;ll create a similar directory structure for the <code>.cljx</code> files.  </p>
 
 <p>Let&#39;s make a <code>src/cljx/myproject/</code> folder and add <code>shared_file.cljx</code> to the new folder.  Next, let&#39;s make a <code>spec/cljx/myproject/</code> folder and add <code>shared_file_spec.cljx</code>.</p>
 
@@ -137,9 +137,11 @@
 
 <p>As you can see, the spec file includes <code>#+clj</code> and <code>#+cljs</code> tags. For this file, that means that cljx will add <code>:require</code> to the clojure version of the file and <code>:require-macros</code> to the Clojure version of the file.  These tags will include or exclude the entire form that follows them.  So one tag can include/exclude an entire function.</p>
 
+<p>As a side note, the <code>:require-macros</code> key is the way we get access to our Clojure macros in ClojureScript.  Since Speclj uses macros for both Clojure and ClojureScript the small <code>#+</code> tags let us properly import the macros for both platforms.</p>
+
 <h1>Run our Tests with A CLJX file</h1>
 
-<p>Now that we have cljx set up and a <code>.cljx</code> file and test file, we can run <code>lein clj-clean-test</code> and <code>lein cljs-clean-test</code>.  Both should evaluate the <code>multiply</code> test included in the single <code>.cljx</code> file.</p>
+<p>Now that we have cljx set up and a <code>.cljx</code> file and test file, we can run <code>lein clj-clean-test</code> and <code>lein cljs-clean-test</code>.  Both should evaluate the <code>multiply</code> test included in the single <code>.cljx</code> file in their respective platforms by testing against the <code>cljx</code> generated code.</p>
 
 <h1>Where We Are</h1>
 

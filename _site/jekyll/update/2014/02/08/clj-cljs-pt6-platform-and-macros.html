@@ -25,7 +25,7 @@
 <p class="meta">08 Feb 2014</p>
 
 <div class="post">
-<p>Here is <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/macro_dependency">Sample Project</a> with working code and tests through this part (Part 6) of the tutorial.</p>
+<p>Here is <a href="https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/part_6_platform_and_macros">Sample Project</a> with working code and tests through this part (Part 6) of the tutorial.</p>
 
 <h1>Using Platform Files with Macros</h1>
 
@@ -56,7 +56,7 @@ Your namespace should now look like this:</p>
 <span class="lineno">7</span> <span class="p">)</span>
 </code></pre></div>
 
-<p>For this example, we&#39;ll test add our existing <code>platform/abs</code> function to a macro.  Add a new test that will evaluate an <code>abs</code> function located in your macro file</p>
+<p>For this example, we&#39;ll add our existing <code>platform/abs</code> functionality to a macro.  But tests come first!  Add a new test that will evaluate an <code>abs</code> function located in your macro file:</p>
 
 <div class="highlight"><pre><code class="clojure"><span class="lineno">1</span>   <span class="p">(</span><span class="nf">it</span> <span class="s">&quot;finds absolute value using macro&quot;</span>
 <span class="lineno">2</span>         <span class="p">(</span><span class="nf">should=</span> <span class="mi">2</span> <span class="p">(</span><span class="nf">macros/abs</span> <span class="mi">-2</span><span class="p">)))</span>
@@ -80,7 +80,7 @@ Your namespace should now look like this:</p>
 
 <p>Now uncomment the <code>:require</code> statement and rerun your tests.  Your ClojureScript tests will fail to run!</p>
 
-<p>It seems like we should <code>:require</code> our platform namespace since the file uses it, but this will actually break the ClojureScript-side tests.  This is because the macro file will always attempt to evaluate the <code>.clj</code> version of our platform file if it is defined in the <code>:require</code> namespace.  By using a fully-qualified namespace in our macro instead of referencing it through a <code>:require</code> statement, the correct platform file will be evaluated at macro expansion.  So, in this case, you should not require the platform file but instead use its fully-qualified namespace where it is needed.</p>
+<p>It seems like we should <code>:require</code> our platform namespace since the file uses it, but this will actually break the ClojureScript-side tests.  This is because the macro file will always attempt to evaluate the <code>.clj</code> version of our platform file if it is defined in the <code>:require</code> namespace.  By using a fully-qualified namespace in our macro instead of referencing it through a <code>:require</code> statement, the correct platform file will be evaluated at macro expansion.  So, when it comes to macros, you should not <code>:require</code> the platform file but instead use its fully-qualified namespace where it is needed.</p>
 
 <h1>Where We&#39;re At</h1>
 

@@ -8,8 +8,9 @@ categories: jekyll update
 [8thLight]: https://8thlight.com
 [speclj]:    https://github.com/slagyr/speclj 
 [cljx]: https://github.com/lynaghk/cljx
-[sample_project]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/cljx
 
+
+[project_part_4]: https://github.com/AndrewZures/combining_clj_cljs_libraries/tree/part_4_cljx 
 [part_1]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt1-context.html 
 [part_2]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt2-setup.html
 [part_3]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt3-dividing-profiles.html
@@ -20,7 +21,7 @@ categories: jekyll update
 [part_8]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt8-combining-profiles.html
 [part_9]: http://andrewzures.github.io/jekyll/update/2014/02/08/clj-cljs-pt9-final-thoughts.html
 
-Here is our continuing [Sample Project][sample_project] with working code up to this part (Part 4) of the tutorial.
+Here is our continuing [Sample Project][project_part_4] with working code up to this part (Part 4) of the tutorial.
 
 #Working With CLJX:
 
@@ -112,7 +113,7 @@ Now our `project.clj` file is updated. We should now be able to add a `.cljx` fi
 
 #Adding a .cljx File to your Project
 
-If you are using the [sample project][sample_project] you'll see that we already have `src/clj/myproject/core.clj` and `src/cljs/myproject/core.cljs`.  We'll create a similar directory structure for the `.cljx` files.  
+If you are using the [sample project][project_part_4] you'll see that we already have `src/clj/myproject/core.clj` and `src/cljs/myproject/core.cljs`.  We'll create a similar directory structure for the `.cljx` files.  
 
 
 Let's make a `src/cljx/myproject/` folder and add `shared_file.cljx` to the new folder.  Next, let's make a `spec/cljx/myproject/` folder and add `shared_file_spec.cljx`.
@@ -150,11 +151,13 @@ In `shared_file_spec.cljx` add:
 
 As you can see, the spec file includes `#+clj` and `#+cljs` tags. For this file, that means that cljx will add `:require` to the clojure version of the file and `:require-macros` to the Clojure version of the file.  These tags will include or exclude the entire form that follows them.  So one tag can include/exclude an entire function.
 
+As a side note, the `:require-macros` key is the way we get access to our Clojure macros in ClojureScript.  Since Speclj uses macros for both Clojure and ClojureScript the small `#+` tags let us properly import the macros for both platforms.
+
 
 #Run our Tests with A CLJX file
 
 
-Now that we have cljx set up and a `.cljx` file and test file, we can run `lein clj-clean-test` and `lein cljs-clean-test`.  Both should evaluate the `multiply` test included in the single `.cljx` file.
+Now that we have cljx set up and a `.cljx` file and test file, we can run `lein clj-clean-test` and `lein cljs-clean-test`.  Both should evaluate the `multiply` test included in the single `.cljx` file in their respective platforms by testing against the `cljx` generated code.
 
 
 #Where We Are
