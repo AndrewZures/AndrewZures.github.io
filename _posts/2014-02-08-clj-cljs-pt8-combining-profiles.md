@@ -93,3 +93,5 @@ Now we can `lein install` and we will have a single library that will work for b
 [Part 7: Context Aware Macros][part_7]
 
 [Part 8: One Jar to Rule Them All][part_8]
+
+[Part 9: Final Thoughts][part_9]
