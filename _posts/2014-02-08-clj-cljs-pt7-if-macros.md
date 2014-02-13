@@ -82,7 +82,7 @@ As you can see it determines if the file is running in a ClojureScript context i
  )
 {% endhighlight %}
 
-If we try this macro, it will pass the tests for both platforms.  It does this by adding the correct platform-specific catch statement during macro expansion.  Thus we have a macro that, to some degree, is away of the context of its expansion.   This may seem like it has opened up an amazing set of functionality but the if statement is fragile.  It relies on the existence (or lack thereof) of a ClojureScript specific namespace.  If something changed in ClojureScript, the entire library could fail.  Thus this is a bit of hack.  But it gets us where we want to go and there are few other options.  
+If we try this macro, it will pass the tests for both platforms.  It does this by adding the correct platform-specific catch statement during macro expansion.  Thus we have a macro that, to some degree, is away of the context of its expansion.   This may seem like it has opened up an amazing set of functionality but the if statement is fragile.  It relies on the existence (or lack thereof) of a ClojureScript specific namespace.  If something changed in ClojureScript, the entire library could fail.  Thus using the `cljs` function above is a bit of hack.  But it gets us where we want to go and there are few other options.  
 
 #ns-resolve Can Help Too
 

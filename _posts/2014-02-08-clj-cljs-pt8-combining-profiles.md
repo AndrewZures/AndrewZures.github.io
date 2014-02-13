@@ -78,7 +78,7 @@ All we have to do now is install our project using the `combined` profile.  Agai
    "install" ["do" "clean," "with-profile" "combined" "install"]
 {% endhighlight %}
 
-Now we can `lein install` and we will have a single library that will work for both Clojure and ClojureScript.  That's All!  If you would like a detailed breakdown of tutorial parts and their related sample project branch go to [Part 9][part_9]
+Now we can `lein install` and we will have a single library that will work for both Clojure and ClojureScript.  That's all!  If you would like a detailed breakdown of tutorial parts and their related sample project branch go to [Part 9][part_9]
 
 [Part 1: A Bit Of Context][part_1]
 

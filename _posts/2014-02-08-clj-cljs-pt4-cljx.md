@@ -25,7 +25,7 @@ Here is our continuing [Sample Project][project_part_4] with working code up to 
 
 #Working With CLJX:
 
-Next, we'll use the [CLJX][cljx] library.  CLJX translates a `.cljx` files into separate `.cljs` and `.clj` files.  You can use small `#+cljs` an `#+clj` tags to differentiate which forms you would like included in which version.  In the 8th Light [Speclj][speclj] project, CLJX replaced our hand-rolled pre-compiler.  This gave us the benefit of relying on an open-source, updated dependency instead of our own program.  
+Next, we'll use the [CLJX][cljx] library.  CLJX translates a `.cljx` files into separate `.cljs` and `.clj` files.  You can use small `#+cljs` and `#+clj` tags to differentiate which forms you would like included in which version.  In the 8th Light [Speclj][speclj] project, CLJX replaced our hand-rolled pre-compiler.  This gave us the benefit of relying on an open-source, updated dependency instead of our own program.  
 
 However, CLJX comes with a few downsides.  First, you'll have to keep track of the status of your cljx results. If you make a change in a `.cljx` file and, for whatever reason, do not recompile the cljx folder, your changes will not appear in your `.clj` and `.cljs` files.  Second, You should be careful to not make changes to the generated `.clj` and `.cljs` files since they will be overridden the next time you generate your `cljx` output.  Third, if you're running a test autorunner, it will likely not pick up changes to .cljx files.
 
@@ -72,7 +72,7 @@ For your `:clj` profile, simply modify the paths like below:
    }
 {% endhighlight %}
 
-For your `:cljs` you new source and test resources will both go in `:source-paths` collection:
+For your `:cljs` profile you new source and test resources will both go in `:source-paths` collection:
 
 
 {% highlight clojure linenos %}
